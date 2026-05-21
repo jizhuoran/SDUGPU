@@ -1220,7 +1220,7 @@ def make_solution_func(language: str, solution_code: str, compiled: bytes, probl
 
     elif language in SCRIPT_LANGUAGES:
         # Run Python/Triton AST checks to reject forbidden patterns
-        if solution_code:
+        if solution_code and os.environ.get("SDUGPU_AUDIT_ALLOW_TORCH") != "1":
             if language == "cutile":
                 pattern_lang = "cutile"
             elif language == "pyptx":

@@ -4,6 +4,7 @@ import { Box } from "@chakra-ui/react";
 import { Header } from "./header";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { env } from "~/env";
+import { useI18n } from "~/i18n";
 
 interface LayoutProps {
   title?: string;
@@ -21,20 +22,26 @@ export function Layout({
   title,
   children,
   ogTitle = "",
-  ogDescription = "A platform for GPU programming challenges. Write efficient GPU kernels and compare your solutions with other developers.",
+  ogDescription,
   ogImgSubtitle = "",
   ogImage,
   useDefaultOg = true,
   isCodingMode = false,
   headerToolbar,
 }: LayoutProps) {
-  const siteTitle = title ? `${title} | Tensara` : "Tensara";
+  const { locale } = useI18n();
+  const siteTitle = title ? `${title} | SDUGPU` : "SDUGPU";
+  const pageDescription =
+    ogDescription ??
+    (locale === "zh"
+      ? "一个用于编写、运行和评测 CUDA kernel 的 GPU 编程练习平台。"
+      : "A GPU programming practice platform for writing, running, and benchmarking CUDA kernels.");
 
   // Generate dynamic OG image URL if no custom image is provided and useDefaultOg is true
   const ogImageUrl = ogImage
     ? ogImage.startsWith("http")
       ? ogImage
-      : `https://tensara.org${ogImage}`
+      : `${env.NEXT_PUBLIC_BASE_URL}${ogImage}`
     : useDefaultOg
       ? `${env.NEXT_PUBLIC_BASE_URL}/api/og?title=${encodeURIComponent(ogTitle)}&subTitle=${encodeURIComponent(ogImgSubtitle)}`
       : undefined;
@@ -43,19 +50,19 @@ export function Layout({
     <>
       <Head>
         <title>{siteTitle}</title>
-        <meta name="description" content={ogDescription} />
+        <meta name="description" content={pageDescription} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={siteTitle} />
-        <meta property="og:description" content={ogDescription} />
-        <meta property="og:url" content="https://tensara.org" />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={env.NEXT_PUBLIC_BASE_URL} />
 
         {/* Twitter tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={siteTitle} />
-        <meta name="twitter:description" content={ogDescription} />
+        <meta name="twitter:description" content={pageDescription} />
 
         {ogImageUrl && (
           <>

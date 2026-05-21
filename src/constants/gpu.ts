@@ -1,5 +1,6 @@
 export const GPU_DISPLAY_NAMES: Record<string, string> = {
   all: "All GPUs",
+  RTX_4060_Ti: "RTX 4060 Ti",
   T4: "Tesla T4",
   H100: "NVIDIA H100",
   H200: "NVIDIA H200",
@@ -13,6 +14,7 @@ export const GPU_DISPLAY_NAMES: Record<string, string> = {
 export const gpuTypes = Object.keys(GPU_DISPLAY_NAMES);
 
 export const GPU_DISPLAY_ON_PROFILE = {
+  RTX_4060_Ti: "RTX 4060 Ti",
   T4: "T4",
   H100: "H100",
   H200: "H200",

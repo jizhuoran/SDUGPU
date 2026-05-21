@@ -1,0 +1,69 @@
+{
+  "total": 5,
+  "passed": 3,
+  "failed": 2,
+  "missingSolution": 2,
+  "sourceRoot": "/tmp/tensara-problems",
+  "gpu": "RTX_4060_Ti",
+  "dockerImage": "tensara-engine",
+  "results": [
+    {
+      "slug": "argmax",
+      "title": "Argmax Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "argmin",
+      "title": "Argmin Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.37,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "array-sort",
+      "title": "Array Sorting",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "avg-pool-1d",
+      "title": "1D Average Pooling",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.37,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "box-blur",
+      "title": "Box Blur",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    }
+  ]
+}

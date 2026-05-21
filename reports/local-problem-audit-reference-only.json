@@ -1,0 +1,379 @@
+{
+  "total": 29,
+  "passed": 19,
+  "failed": 10,
+  "missingSolution": 0,
+  "sourceRoot": "/tmp/tensara-problems",
+  "gpu": "RTX_4060_Ti",
+  "dockerImage": "tensara-engine",
+  "results": [
+    {
+      "slug": "array-sort",
+      "title": "Array Sorting",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "box-blur",
+      "title": "Box Blur",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "ecc-point-negation",
+      "title": "ECC Point Negation (Batched)",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.38,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "edge-detect",
+      "title": "Edge Detection",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.48,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "histogram",
+      "title": "Image Histogram",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mse_loss",
+      "title": "Mean Squared Error Loss",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp4-dequantize",
+      "title": "MXFP4 Dequantization",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.21,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 27, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 49, in create_inputs\n  File \"<string>\", line 29, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "mxfp8-dequantize",
+      "title": "MXFP8 Dequantization",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.21,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 27, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 50, in create_inputs\n  File \"<string>\", line 29, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "running-sum-1d",
+      "title": "1D Running Sum",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.56,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "threshold",
+      "title": "Image Thresholding",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "all-pairs-shortest-path",
+      "title": "All-Pairs Shortest Path",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.47,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "conv2d-relu-hardswish",
+      "title": "2D Convolution with ReLU and HardSwish",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.6,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "gemm-multiply-leakyrelu",
+      "title": "GEMM with Element-wise Multiply and LeakyReLU",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-sigmoid-sum",
+      "title": "Matrix Multiplication with Sigmoid and Sum",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.48,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-swish-scaling",
+      "title": "Matrix Multiplication with Swish and Scaling",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matrix-power",
+      "title": "Matrix Nth Power",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "min-spanning-tree",
+      "title": "Minimum Spanning Tree",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp4-quantize",
+      "title": "MXFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.32,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 27, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 36, in reference_solution\n  File \"<string>\", line 29, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "mxfp8-quantize",
+      "title": "MXFP8 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.31,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 27, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 36, in reference_solution\n  File \"<string>\", line 29, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "nvfp4-dequantize",
+      "title": "NVFP4 Dequantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.22,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "No module named 'flashinfer'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 40, in create_inputs\nModuleNotFoundError: No module named 'flashinfer'\n"
+    },
+    {
+      "slug": "nvfp4-quantize",
+      "title": "NVFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.31,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "No module named 'flashinfer'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 26, in reference_solution\nModuleNotFoundError: No module named 'flashinfer'\n"
+    },
+    {
+      "slug": "poly-multiply-ff",
+      "title": "Polynomial Multiplication over Finite Field ",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "shortest-path",
+      "title": "Single Source Shortest Path",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "vector-multiply-ff",
+      "title": "Vector Multiplication over Finite Field",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp4-gemm",
+      "title": "MXFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.26,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 31, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 75, in create_inputs\n  File \"<string>\", line 33, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "mxfp8-gemm",
+      "title": "MXFP8 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.3,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.",
+      "details": "Traceback (most recent call last):\n  File \"<string>\", line 31, in _mx_tensor_api\nModuleNotFoundError: No module named 'torchao'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 75, in create_inputs\n  File \"<string>\", line 33, in _mx_tensor_api\nRuntimeError: TorchAO MXTensor APIs are required. Install a torchao build with torchao.prototype.mx_formats.mx_tensor support.\n"
+    },
+    {
+      "slug": "nvfp4-gemm",
+      "title": "NVFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.21,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "No module named 'flashinfer'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 61, in create_inputs\nModuleNotFoundError: No module named 'flashinfer'\n"
+    },
+    {
+      "slug": "nvfp4-gemv",
+      "title": "NVFP4 GEMV",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.22,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "No module named 'flashinfer'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 56, in create_inputs\nModuleNotFoundError: No module named 'flashinfer'\n"
+    },
+    {
+      "slug": "scaled-dot-attention",
+      "title": "Scaled Dot-Product Attention",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 1.46,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    }
+  ]
+}

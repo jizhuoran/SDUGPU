@@ -11,6 +11,27 @@ import { type Parameter } from "~/types/problem";
 import { DEFAULT_LANGUAGE } from "~/constants/problem";
 import { type Problem } from "@prisma/client";
 
+const shouldRefreshSavedStarter = (
+  slug: string,
+  language: ProgrammingLanguage,
+  savedSolution: string,
+  starterCode: string
+) => {
+  if (slug !== "vector-addition" || language !== "cuda") return false;
+  if (
+    savedSolution.includes("d_input1") &&
+    savedSolution.includes("size_t n")
+  ) {
+    return false;
+  }
+
+  return (
+    starterCode.includes("d_input1") &&
+    starterCode.includes("size_t n") &&
+    savedSolution.includes('extern "C" void solution(')
+  );
+};
+
 export function useCodePersistence(
   slug: string | undefined,
   problem: Problem,
@@ -60,7 +81,15 @@ export function useCodePersistence(
     if (memoizedStarterCode) {
       setStarterCode(memoizedStarterCode);
       const savedSolution = loadSolutionFromStorage(slug, selectedLanguage);
-      if (savedSolution) {
+      if (
+        savedSolution &&
+        !shouldRefreshSavedStarter(
+          slug,
+          selectedLanguage,
+          savedSolution,
+          memoizedStarterCode
+        )
+      ) {
         setCode(savedSolution);
       } else {
         setCode(memoizedStarterCode);
@@ -87,7 +116,15 @@ export function useCodePersistence(
   useEffect(() => {
     if (!hasSetInitialCode && slug) {
       const savedSolution = loadSolutionFromStorage(slug, selectedLanguage);
-      if (savedSolution) {
+      if (
+        savedSolution &&
+        !shouldRefreshSavedStarter(
+          slug,
+          selectedLanguage,
+          savedSolution,
+          starterCode
+        )
+      ) {
         setCode(savedSolution);
         setHasSetInitialCode(true);
       } else if (starterCode) {

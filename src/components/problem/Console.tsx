@@ -17,6 +17,7 @@ import {
 } from "~/types/submission";
 import { FiCheck, FiChevronDown, FiChevronRight, FiCopy } from "react-icons/fi";
 import { useState } from "react";
+import { useI18n } from "~/i18n";
 
 const pulseAnimation = keyframes`
   0% { opacity: 0.6; }
@@ -37,35 +38,35 @@ export const ConsoleStatusBadge = ({
         return {
           color: "#569cd6",
           bg: "#1B1B35",
-          text: "Queued",
+          text: "排队中",
           loading: true,
         };
       case SampleStatus.COMPILING:
         return {
           color: "#569cd6",
           bg: "#1B1B35",
-          text: "Compiling",
+          text: "编译中",
           loading: true,
         };
       case SampleStatus.RUNNING:
         return {
           color: "#569cd6",
           bg: "#1B1B35",
-          text: "Running",
+          text: "运行中",
           loading: true,
         };
       case SampleStatus.PASSED:
         return {
           color: "#4EC9B0",
           bg: "#1B352B",
-          text: "Passed",
+          text: "通过",
           loading: false,
         };
       case SampleStatus.FAILED:
         return {
           color: "#FF5D5D",
           bg: "#351B1B",
-          text: "Failed",
+          text: "失败",
           loading: false,
         };
       case SampleStatus.ERROR:
@@ -75,14 +76,14 @@ export const ConsoleStatusBadge = ({
         return {
           color: "#FF5D5D",
           bg: "#351B1B",
-          text: "Error",
+          text: "错误",
           loading: false,
         };
       default:
         return {
           color: "#858585",
           bg: "#1A1A1A",
-          text: "Ready",
+          text: "就绪",
           loading: false,
         };
     }
@@ -141,31 +142,31 @@ const OutputBox = ({
         return {
           color: "#569CD6",
           borderColor: "#2A2A2A",
-          label: "Input",
+          label: "输入",
         };
       case "expected":
         return {
           color: "#4FC1FF",
           borderColor: "#2A2A2A",
-          label: "Expected Output",
+          label: "期望输出",
         };
       case "output":
         return {
           color: "#4EC9B0",
           borderColor: "#2A2A2A",
-          label: "Your Output",
+          label: "你的输出",
         };
       case "error":
         return {
           color: "#FF5D5D",
           borderColor: "#2A2A2A",
-          label: "Error Output",
+          label: "错误输出",
         };
       default:
         return {
           color: "#858585",
           borderColor: "#2A2A2A",
-          label: title ?? "Output",
+          label: title ?? "输出",
         };
     }
   };
@@ -191,7 +192,7 @@ const OutputBox = ({
       >
         <HStack spacing={1.5} minW={0}>
           <IconButton
-            aria-label={isCollapsed ? "Expand" : "Collapse"}
+            aria-label={isCollapsed ? "展开" : "收起"}
             icon={
               isCollapsed ? (
                 <FiChevronRight size={14} />
@@ -217,9 +218,9 @@ const OutputBox = ({
             {props.label}
           </Text>
         </HStack>
-        <Tooltip label={hasCopied ? "Copied" : "Copy"} placement="top" hasArrow>
+        <Tooltip label={hasCopied ? "已复制" : "复制"} placement="top" hasArrow>
           <IconButton
-            aria-label={hasCopied ? "Copied" : "Copy"}
+            aria-label={hasCopied ? "已复制" : "复制"}
             icon={hasCopied ? <FiCheck size={14} /> : <FiCopy size={14} />}
             size="xs"
             variant="ghost"
@@ -408,6 +409,7 @@ const ResizableConsole = ({
   embedded = false,
   hideHeader = false,
 }: ConsoleProps) => {
+  const { t } = useI18n();
   const diff =
     output?.expected_output && output?.output
       ? normalizeForCompare(output.expected_output) ===
@@ -459,11 +461,11 @@ const ResizableConsole = ({
           <VStack align="center" justify="center" h="100%" spacing={3}>
             {!hideHeader && (
               <Text color="#858585" fontSize="lg" textAlign="center">
-                Sample Run Results
+                {t("problem.sampleResult")}
               </Text>
             )}
             <Text color="#858585" fontSize="sm" textAlign="center">
-              Hit &#34;Run&#34; to test your code with sample inputs
+              {t("problem.sampleHint")}
             </Text>
           </VStack>
         ) : (
@@ -471,7 +473,7 @@ const ResizableConsole = ({
             {!hideHeader && (
               <HStack justify="space-between" align="center">
                 <Text color="#D4D4D4" fontSize="md" fontWeight="600">
-                  Sample Run Results
+                  {t("problem.sampleResult")}
                 </Text>
                 <ConsoleStatusBadge status={status} isRunning={isRunning} />
               </HStack>
@@ -482,7 +484,7 @@ const ResizableConsole = ({
               <OutputBox content={output?.expected_output} type="expected" />
               {diff && (
                 <OutputBox
-                  title="Diff"
+                  title={t("problem.diff")}
                   content=" "
                   copyText={diffCopyText ?? undefined}
                   renderContent={
@@ -652,7 +654,7 @@ const ResizableConsole = ({
 
               {output?.stdout && (
                 <OutputBox
-                  title="Standard Output"
+                  title="标准输出"
                   content={output.stdout}
                   type="default"
                 />
@@ -664,7 +666,7 @@ const ResizableConsole = ({
 
               {output?.message && (
                 <OutputBox
-                  title="Error Message"
+                  title="错误信息"
                   content={output.message}
                   type="error"
                 />
@@ -672,7 +674,7 @@ const ResizableConsole = ({
 
               {output?.details && (
                 <OutputBox
-                  title="Error Details"
+                  title="错误详情"
                   content={output.details}
                   type="error"
                 />

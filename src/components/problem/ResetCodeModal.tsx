@@ -9,6 +9,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
+import { useI18n } from "~/i18n";
 
 interface ResetCodeModalProps {
   isOpen: boolean;
@@ -17,6 +18,8 @@ interface ResetCodeModalProps {
 }
 
 const ResetCodeModal = ({ isOpen, onClose, onReset }: ResetCodeModalProps) => {
+  const { t } = useI18n();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay bg="blackAlpha.800" backdropFilter="blur(5px)" />
@@ -27,13 +30,10 @@ const ResetCodeModal = ({ isOpen, onClose, onReset }: ResetCodeModalProps) => {
         mx={4}
         maxW="md"
       >
-        <ModalHeader color="white">Reset Code</ModalHeader>
+        <ModalHeader color="white">{t("problem.resetCode")}</ModalHeader>
         <ModalCloseButton color="gray.400" />
         <ModalBody>
-          <Text color="gray.300">
-            Are you sure you want to reset to the starter code? Your changes
-            will be lost.
-          </Text>
+          <Text color="gray.300">{t("problem.resetConfirm")}</Text>
         </ModalBody>
 
         <ModalFooter gap={3}>
@@ -43,7 +43,7 @@ const ResetCodeModal = ({ isOpen, onClose, onReset }: ResetCodeModalProps) => {
             color="gray.300"
             _hover={{ bg: "whiteAlpha.100" }}
           >
-            Cancel
+            {t("problem.cancel")}
           </Button>
           <Button
             bg="rgba(34, 197, 94, 0.1)"
@@ -56,7 +56,7 @@ const ResetCodeModal = ({ isOpen, onClose, onReset }: ResetCodeModalProps) => {
               onClose();
             }}
           >
-            Reset Code
+            {t("problem.resetCode")}
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -1,0 +1,143 @@
+{
+  "total": 10,
+  "passed": 4,
+  "failed": 6,
+  "missingSolution": 0,
+  "sourceRoot": "/tmp/tensara-problems",
+  "gpu": "RTX_4060_Ti",
+  "dockerImage": "tensara-engine",
+  "results": [
+    {
+      "slug": "mxfp4-dequantize",
+      "title": "MXFP4 Dequantization",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 3.59,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp8-dequantize",
+      "title": "MXFP8 Dequantization",
+      "difficulty": "EASY",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 2.05,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp4-quantize",
+      "title": "MXFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 2.08,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp8-quantize",
+      "title": "MXFP8 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 2.07,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "nvfp4-dequantize",
+      "title": "NVFP4 Dequantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 2.19,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "[Errno 30] Read-only file system: '/home/runner/.cache'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 40, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py\", line 24, in <module>\n    from . import jit as jit\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py\", line 22, in <module>\n    from . import cubin_loader\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py\", line 30, in <module>\n    from .core import logger\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py\", line 18, in <module>\n    os.makedirs(jit_env.FLASHINFER_WORKSPACE_DIR, exist_ok=True)\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 225, in makedirs\nOSError: [Errno 30] Read-only file system: '/home/runner/.cache'\n"
+    },
+    {
+      "slug": "nvfp4-quantize",
+      "title": "NVFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 2.26,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "[Errno 30] Read-only file system: '/home/runner/.cache'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 26, in reference_solution\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py\", line 24, in <module>\n    from . import jit as jit\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py\", line 22, in <module>\n    from . import cubin_loader\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py\", line 30, in <module>\n    from .core import logger\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py\", line 18, in <module>\n    os.makedirs(jit_env.FLASHINFER_WORKSPACE_DIR, exist_ok=True)\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 225, in makedirs\nOSError: [Errno 30] Read-only file system: '/home/runner/.cache'\n"
+    },
+    {
+      "slug": "mxfp4-gemm",
+      "title": "MXFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.99,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "torch.nn.functional.scaled_mm is required for this problem.",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 41, in reference_solution\nRuntimeError: torch.nn.functional.scaled_mm is required for this problem.\n"
+    },
+    {
+      "slug": "mxfp8-gemm",
+      "title": "MXFP8 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 1.99,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "torch.nn.functional.scaled_mm is required for this problem.",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 41, in reference_solution\nRuntimeError: torch.nn.functional.scaled_mm is required for this problem.\n"
+    },
+    {
+      "slug": "nvfp4-gemm",
+      "title": "NVFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 2.15,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "[Errno 30] Read-only file system: '/home/runner/.cache'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 61, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py\", line 24, in <module>\n    from . import jit as jit\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py\", line 22, in <module>\n    from . import cubin_loader\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py\", line 30, in <module>\n    from .core import logger\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py\", line 18, in <module>\n    os.makedirs(jit_env.FLASHINFER_WORKSPACE_DIR, exist_ok=True)\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 225, in makedirs\nOSError: [Errno 30] Read-only file system: '/home/runner/.cache'\n"
+    },
+    {
+      "slug": "nvfp4-gemv",
+      "title": "NVFP4 GEMV",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 2.17,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "[Errno 30] Read-only file system: '/home/runner/.cache'",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 56, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py\", line 24, in <module>\n    from . import jit as jit\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py\", line 22, in <module>\n    from . import cubin_loader\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py\", line 30, in <module>\n    from .core import logger\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py\", line 18, in <module>\n    os.makedirs(jit_env.FLASHINFER_WORKSPACE_DIR, exist_ok=True)\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 215, in makedirs\n  File \"<frozen os>\", line 225, in makedirs\nOSError: [Errno 30] Read-only file system: '/home/runner/.cache'\n"
+    }
+  ]
+}

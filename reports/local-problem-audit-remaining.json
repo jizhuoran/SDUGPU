@@ -1,0 +1,91 @@
+{
+  "total": 6,
+  "passed": 2,
+  "failed": 4,
+  "missingSolution": 0,
+  "sourceRoot": "/tmp/tensara-problems",
+  "gpu": "RTX_4060_Ti",
+  "dockerImage": "tensara-engine",
+  "results": [
+    {
+      "slug": "nvfp4-dequantize",
+      "title": "NVFP4 Dequantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 11.39,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "Invalid backend: 89",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 47, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 1172, in nvfp4_quantize\n    a_fp4, a_sf = fp4_quantize(\n                  ^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 864, in fp4_quantize\n    x_q, sf = get_fp4_quantization_module(f\"{major}{minor}\").fp4_quantize_sm100(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 236, in get_fp4_quantization_module\n    raise ValueError(f\"Invalid backend: {backend}\")\nValueError: Invalid backend: 89\n"
+    },
+    {
+      "slug": "nvfp4-quantize",
+      "title": "NVFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 11.41,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "Invalid backend: 89",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 276, in run_reference_sample_case\n    expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/runner.py\", line 41, in _reference_outputs_on_cpu\n    ref_return = problem.reference_solution(*input_tensors)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 33, in reference_solution\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 1172, in nvfp4_quantize\n    a_fp4, a_sf = fp4_quantize(\n                  ^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 864, in fp4_quantize\n    x_q, sf = get_fp4_quantization_module(f\"{major}{minor}\").fp4_quantize_sm100(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 236, in get_fp4_quantization_module\n    raise ValueError(f\"Invalid backend: {backend}\")\nValueError: Invalid backend: 89\n"
+    },
+    {
+      "slug": "mxfp4-gemm",
+      "title": "MXFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 2.13,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp8-gemm",
+      "title": "MXFP8 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": true,
+      "seconds": 2.09,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "nvfp4-gemm",
+      "title": "NVFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 11.48,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "Invalid backend: 89",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 75, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 1172, in nvfp4_quantize\n    a_fp4, a_sf = fp4_quantize(\n                  ^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 864, in fp4_quantize\n    x_q, sf = get_fp4_quantization_module(f\"{major}{minor}\").fp4_quantize_sm100(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 236, in get_fp4_quantization_module\n    raise ValueError(f\"Invalid backend: {backend}\")\nValueError: Invalid backend: 89\n"
+    },
+    {
+      "slug": "nvfp4-gemv",
+      "title": "NVFP4 GEMV",
+      "difficulty": "HARD",
+      "solution": "reference",
+      "ok": false,
+      "seconds": 11.4,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "Invalid backend: 89",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 275, in run_reference_sample_case\n    input_tensors = sample[\"create_inputs\"]()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 70, in create_inputs\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 1172, in nvfp4_quantize\n    a_fp4, a_sf = fp4_quantize(\n                  ^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/api_logging.py\", line 1546, in _auto_dump_wrapper\n    return _inner(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 864, in fp4_quantize\n    x_q, sf = get_fp4_quantization_module(f\"{major}{minor}\").fp4_quantize_sm100(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/flashinfer/quantization/fp4_quantization.py\", line 236, in get_fp4_quantization_module\n    raise ValueError(f\"Invalid backend: {backend}\")\nValueError: Invalid backend: 89\n"
+    }
+  ]
+}

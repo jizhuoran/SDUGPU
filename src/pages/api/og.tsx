@@ -8,13 +8,13 @@ export const config = {
 export default async function handler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const title = searchParams.get("title") ?? "Tensara";
+  const title = searchParams.get("title") ?? "SDUGPU";
   const subTitle = searchParams.get("subTitle") ?? "";
 
   // Load the logo and font
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
   const [logoData, DMSansData, SpaceGroteskData] = await Promise.all([
-    fetch(new URL(`${baseUrl}/logo_og.png`, req.url)).then((res) =>
+    fetch(new URL(`${baseUrl}/sdu-logo.svg`, req.url)).then((res) =>
       res.arrayBuffer()
     ),
     fetch(new URL(`${baseUrl}/DMSans_24pt-SemiBold.ttf`, req.url)).then((res) =>
@@ -41,8 +41,8 @@ export default async function handler(req: NextRequest) {
       >
         {/* Logo */}
         <img
-          src={`data:image/png;base64,${Buffer.from(logoData).toString("base64")}`}
-          alt="Tensara Logo"
+          src={`data:image/svg+xml;base64,${Buffer.from(logoData).toString("base64")}`}
+          alt="SDUGPU 标志"
           width={200}
           height={200}
           style={{ objectFit: "contain", marginBottom: "20px" }}

@@ -1097,12 +1097,12 @@ const CodeEditor = ({
           </TabList>
           {(ptxDirty ?? sassDirty) && (
             <Tooltip
-              label="PTX/SASS may be outdated. Run or submit your CUDA source to refresh."
+              label="PTX/SASS 可能已过期。运行或提交 CUDA 源码后会刷新。"
               placement="top"
               hasArrow
             >
               <IconButton
-                aria-label="PTX/SASS might be outdated"
+                aria-label="PTX/SASS 可能已过期"
                 icon={<FiAlertTriangle />}
                 size="xs"
                 variant="ghost"
@@ -1116,7 +1116,7 @@ const CodeEditor = ({
             </Tooltip>
           )}
           <IconButton
-            aria-label="Close Split View"
+            aria-label="关闭分栏视图"
             icon={<FiX />}
             size="xs"
             variant="ghost"

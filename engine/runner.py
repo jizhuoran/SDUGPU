@@ -262,6 +262,51 @@ def run_sample_case(
         yield {"status": "ERROR", "message": str(e), "details": traceback.format_exc()}
 
 
+@utils.subproc_generator(timeout=60)
+def run_reference_sample_case(problem_name, problem_def):
+    """
+    Internal audit-only check for problems without a runnable sample solution.
+    It validates local problem loading, sample generation, reference execution,
+    and verify_result behavior using the reference output as the actual output.
+    """
+    try:
+        problem = utils.load_problem_module(problem_name, problem_def)
+        sample = problem.generate_sample()
+        input_tensors = sample["create_inputs"]()
+        expected_outputs = _reference_outputs_on_cpu(problem, input_tensors)
+
+        actual_outputs_cpu = [
+            t.clone() if isinstance(t, torch.Tensor) else t for t in expected_outputs
+        ]
+        if len(expected_outputs) == 1 and len(actual_outputs_cpu) == 1:
+            exp, act = expected_outputs[0], actual_outputs_cpu[0]
+        else:
+            exp, act = expected_outputs, actual_outputs_cpu
+        is_correct, debug_info = problem.verify_result(exp, act)
+
+        yield {
+            "status": "PASSED" if is_correct else "FAILED",
+            "input": utils.to_lossless_jsonable(
+                [t if not isinstance(t, torch.Tensor) else t for t in input_tensors]
+            ),
+            "output": (
+                utils.to_lossless_jsonable(actual_outputs_cpu[0])
+                if len(actual_outputs_cpu) == 1
+                else {"multi": True, "values": utils.to_lossless_jsonable(actual_outputs_cpu)}
+            ),
+            "expected_output": (
+                utils.to_lossless_jsonable(expected_outputs[0])
+                if len(expected_outputs) == 1
+                else {"multi": True, "values": utils.to_lossless_jsonable(expected_outputs)}
+            ),
+            "debug_info": utils.to_lossless_jsonable(debug_info),
+            "stdout": "",
+            "stderr": "",
+        }
+    except Exception as e:
+        yield {"status": "ERROR", "message": str(e), "details": traceback.format_exc()}
+
+
 def run_sanity_check(
     problem_name: str, problem_def: str, solution_func, language: str, param_func=None
 ):

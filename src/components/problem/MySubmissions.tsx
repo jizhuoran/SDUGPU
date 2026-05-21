@@ -29,6 +29,7 @@ import { useState, useMemo } from "react";
 import { LANGUAGE_PROFILE_DISPLAY_NAMES } from "~/constants/language";
 import { useSplitPanel } from "./SplitPanel";
 import { ModerationStatusBadge } from "~/components/submission/ModerationStatusBadge";
+import { useI18n } from "~/i18n";
 
 interface MySubmissionsProps {
   submissions: Submission[] | undefined;
@@ -41,6 +42,7 @@ const MySubmissions = ({
   isLoading,
   onBackToProblem,
 }: MySubmissionsProps) => {
+  const { locale, t } = useI18n();
   const [statusFilter, setStatusFilter] = useState<string[]>(["all"]);
   const [sortBy, setSortBy] = useState<"time" | "performance">("time");
   const { splitRatio } = useSplitPanel();
@@ -67,9 +69,9 @@ const MySubmissions = ({
   }, [submissions, statusFilter, sortBy]);
 
   const filterOptions = [
-    { value: ["all"], label: "All", shortLabel: "All" },
-    { value: ["ACCEPTED"], label: "Accepted", shortLabel: "AC" },
-    { value: ["WRONG_ANSWER"], label: "Wrong Answer", shortLabel: "WA" },
+    { value: ["all"], label: t("problem.filterAll"), shortLabel: t("problem.filterAll") },
+    { value: ["ACCEPTED"], label: t("problems.solved"), shortLabel: "AC" },
+    { value: ["WRONG_ANSWER"], label: t("problem.filterWrongAnswer"), shortLabel: "WA" },
     {
       value: [
         "ERROR",
@@ -78,7 +80,7 @@ const MySubmissions = ({
         "TIME_LIMIT_EXCEEDED",
         "MEMORY_LIMIT_EXCEEDED",
       ],
-      label: "Errors",
+      label: t("problem.filterError"),
       shortLabel: "Err",
     },
   ];
@@ -87,7 +89,7 @@ const MySubmissions = ({
     <VStack spacing={4} align="stretch" p={3}>
       <VStack spacing={4} align="stretch">
         <HStack justify="space-between">
-          <Heading size="md">My Submissions</Heading>
+          <Heading size="md">{t("problem.mySubmissions")}</Heading>
           <Button
             size="sm"
             variant="ghost"
@@ -100,7 +102,7 @@ const MySubmissions = ({
               color: "white",
             }}
           >
-            Back to Problem
+            {t("problem.backToProblem")}
           </Button>
         </HStack>
 
@@ -160,7 +162,7 @@ const MySubmissions = ({
                   color: "white",
                 }}
               >
-                Filter
+                {t("problem.filter")}
               </MenuButton>
               <MenuList bg="gray.800" borderColor="whiteAlpha.200" p={0}>
                 {filterOptions.map((status) => (
@@ -211,7 +213,7 @@ const MySubmissions = ({
             fontSize="sm"
             px={3}
           >
-            {sortBy === "time" ? "Newest" : "Fastest"}
+            {sortBy === "time" ? "最新" : "最快"}
           </Button>
         </HStack>
       </VStack>
@@ -223,7 +225,7 @@ const MySubmissions = ({
           </Box>
         ) : filteredSubmissions.length === 0 ? (
           <Box p={4} textAlign="center" color="whiteAlpha.700">
-            No submissions yet
+            {t("problem.noSubmissions")}
           </Box>
         ) : (
           filteredSubmissions.map((submission) => (
@@ -246,7 +248,7 @@ const MySubmissions = ({
                       color={`${getStatusColor(submission.status)}.400`}
                     />
                     <Text fontWeight="semibold">
-                      {formatStatus(submission.status)}
+                          {formatStatus(submission.status, locale)}
                     </Text>
                     <ModerationStatusBadge
                       status={submission.moderationStatus}
@@ -262,7 +264,7 @@ const MySubmissions = ({
                     </Text>
                   </HStack>
                   <Text color="whiteAlpha.700" fontSize="sm">
-                    {new Date(submission.createdAt).toLocaleString("en-US", {
+                    {new Date(submission.createdAt).toLocaleString("zh-CN", {
                       year: useCompactLabels ? "2-digit" : "numeric",
                       month: useCompactLabels ? "numeric" : "short",
                       day: "numeric",
@@ -278,7 +280,7 @@ const MySubmissions = ({
                     {submission.gflops !== null && (
                       <Box>
                         <Text color="whiteAlpha.600" fontSize="sm">
-                          Performance
+                          {t("problem.performance")}
                         </Text>
                         <Text fontWeight="semibold">
                           {submission.gflops.toFixed(2)} GFLOPS
@@ -288,7 +290,7 @@ const MySubmissions = ({
                     {submission.runtime !== null && (
                       <Box>
                         <Text color="whiteAlpha.600" fontSize="sm">
-                          Runtime
+                          {t("problem.runtime")}
                         </Text>
                         <Text fontWeight="semibold">
                           {formatRuntime(submission.runtime)}

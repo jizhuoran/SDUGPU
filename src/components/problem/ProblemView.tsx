@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { IoMdTime } from "react-icons/io";
-import { FiTrendingUp, FiBookOpen } from "react-icons/fi";
+import { FiBookOpen } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -17,7 +17,12 @@ import rehypeHighlight from "rehype-highlight";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/github-dark.css";
 import { type Problem } from "@prisma/client";
-import { getDifficultyColor } from "~/pages/problems";
+import { formatDifficultyLabel, getDifficultyColor } from "~/pages/problems";
+import { useI18n } from "~/i18n";
+import {
+  getProblemDescription,
+  getProblemTitle,
+} from "~/i18n/problem-content";
 
 interface ProblemViewProps {
   problem: Problem;
@@ -31,11 +36,19 @@ const ProblemView = ({
   onViewSubmissions,
   onViewReference,
 }: ProblemViewProps) => {
+  const { locale, t } = useI18n();
+  const title = getProblemTitle(problem.slug, problem.title, locale);
+  const description = getProblemDescription(
+    problem.slug,
+    problem.description ?? "",
+    locale
+  );
+
   return (
     <Box>
       <Box mb={2}>
         <Heading as="h1" size="lg">
-          {problem.title}
+          {title}
         </Heading>
       </Box>
       <HStack
@@ -54,53 +67,8 @@ const ProblemView = ({
           borderRadius="lg"
           flexShrink={0}
         >
-          {problem.difficulty}
+          {formatDifficultyLabel(problem.difficulty, locale)}
         </Badge>
-        <Button
-          variant="outline"
-          height="28px"
-          px={2}
-          py={1}
-          fontSize="xs"
-          onClick={onViewSubmissions}
-          leftIcon={<IoMdTime size={16} />}
-          borderRadius="lg"
-          borderColor="whiteAlpha.200"
-          color="gray.300"
-          cursor="pointer"
-          flexShrink={0}
-          whiteSpace="nowrap"
-          _hover={{
-            bg: "whiteAlpha.50",
-            color: "white",
-          }}
-          // iconSpacing={1}
-        >
-          My Submissions
-        </Button>
-        <Button
-          variant="outline"
-          height="28px"
-          px={2}
-          py={1}
-          fontSize="xs"
-          onClick={() => {
-            window.location.href = `/leaderboard/${problem.slug}`;
-          }}
-          leftIcon={<Icon as={FiTrendingUp} boxSize={3} />}
-          borderRadius="lg"
-          borderColor="whiteAlpha.200"
-          color="gray.300"
-          cursor="pointer"
-          flexShrink={0}
-          whiteSpace="nowrap"
-          _hover={{
-            bg: "whiteAlpha.50",
-            color: "white",
-          }}
-        >
-          Leaderboard
-        </Button>
         {problem.referenceSolution && onViewReference && (
           <Button
             variant="outline"
@@ -121,9 +89,31 @@ const ProblemView = ({
               color: "white",
             }}
           >
-            Reference
+            {t("problem.reference")}
           </Button>
         )}
+        <Button
+          variant="outline"
+          height="28px"
+          px={2}
+          py={1}
+          fontSize="xs"
+          onClick={onViewSubmissions}
+          leftIcon={<IoMdTime size={16} />}
+          borderRadius="lg"
+          borderColor="whiteAlpha.200"
+          color="gray.300"
+          cursor="pointer"
+          flexShrink={0}
+          whiteSpace="nowrap"
+          _hover={{
+            bg: "whiteAlpha.50",
+            color: "white",
+          }}
+          // iconSpacing={1}
+        >
+          {t("problem.mySubmissions")}
+        </Button>
       </HStack>
 
       <Box className="markdown" color="gray.100">
@@ -167,7 +157,7 @@ const ProblemView = ({
             ),
           }}
         >
-          {problem.description}
+          {description}
         </ReactMarkdown>
       </Box>
     </Box>

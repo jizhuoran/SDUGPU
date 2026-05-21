@@ -7,7 +7,7 @@ export type LanguageResource = {
 };
 
 export const LANGUAGE_DISPLAY_NAMES: Record<string, string> = {
-  all: "All Languages",
+  all: "全部语言",
   cuda: "CUDA C++",
   python: "Triton",
   pyptx: "PyPTX",
@@ -108,15 +108,15 @@ export function getLanguageGpuSupportError(
   }
 
   if (normalized === "cutile") {
-    return "cuTile Python submissions require the NVIDIA B200 GPU.";
+    return "cuTile Python 提交需要 NVIDIA B200 GPU。";
   }
 
   if (normalized === "pyptx") {
     const supported = PYPTX_SUPPORTED_GPUS.map(
       (gpu) => GPU_DISPLAY_NAMES[gpu]
     ).join(", ");
-    return `PyPTX submissions require one of: ${supported}.`;
+    return `PyPTX 提交需要以下 GPU 之一：${supported}。`;
   }
 
-  return `${LANGUAGE_DISPLAY_NAMES[normalized] ?? language} is not supported on ${gpuType ?? "this GPU"}.`;
+  return `${LANGUAGE_DISPLAY_NAMES[normalized] ?? language} 暂不支持 ${gpuType ?? "当前 GPU"}。`;
 }

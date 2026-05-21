@@ -401,7 +401,7 @@ const SubmissionForm = ({
                 color: "white",
               }}
             >
-              Reset Code
+              重置代码
             </Button>
           </>
         )}
@@ -420,7 +420,7 @@ const SubmissionForm = ({
             size="md"
             onClick={onRun}
             isLoading={isRunning}
-            loadingText="Run"
+            loadingText="运行"
             spinner={<></>}
             disabled={isRunning}
             borderRadius="lg"
@@ -438,7 +438,7 @@ const SubmissionForm = ({
             }}
             transition="all 0.2s"
           >
-            Run
+            运行
           </Button>
         </Tooltip>
         <Tooltip
@@ -456,7 +456,7 @@ const SubmissionForm = ({
             size="md"
             onClick={onSubmit}
             isLoading={isSubmitting}
-            loadingText="Submit"
+            loadingText="提交"
             spinner={<></>}
             disabled={isSubmitting}
             borderRadius="lg"
@@ -474,7 +474,7 @@ const SubmissionForm = ({
             }}
             transition="all 0.2s"
           >
-            Submit
+            提交
           </Button>
         </Tooltip>
       </HStack>

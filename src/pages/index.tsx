@@ -5,7 +5,6 @@ import {
   Heading,
   Text,
   VStack,
-  Image,
   Icon,
   SimpleGrid,
   Link,
@@ -15,19 +14,10 @@ import {
 import { motion, AnimatePresence } from "framer-motion"; // Import AnimatePresence
 import React, { useState, useEffect, useCallback } from "react"; // Import useCallback
 import { Layout } from "~/components/layout";
-import {
-  FiCpu,
-  FiAward,
-  FiUsers,
-  FiArrowRight,
-  FiGitPullRequest,
-  FiCode,
-  FiBookOpen,
-  FiStar,
-} from "react-icons/fi";
-import { FaDiscord, FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { FiCpu, FiArrowRight, FiCode, FiBookOpen } from "react-icons/fi";
 import { type IconType } from "react-icons";
 import dynamic from "next/dynamic";
+import { useI18n } from "~/i18n";
 
 const AnimatedCudaEditor = dynamic(() => import("~/components/CudaEditor"), {
   ssr: false,
@@ -89,87 +79,6 @@ const FeatureCard = ({
   );
 };
 
-type LandingActivity = {
-  repoStars: number | null;
-  prs: Array<{ title: string; url: string; number: number; updatedAt: string }>;
-  problems: Array<{
-    title: string;
-    slug: string;
-    difficulty: string;
-    createdAt: string;
-  }>;
-  blogPosts: Array<{
-    title: string;
-    slug: string;
-    publishedAt: string;
-    authorUsername: string | null;
-  }>;
-};
-
-const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
-function formatRelativeTime(isoDate: string) {
-  const date = new Date(isoDate);
-  const deltaMs = date.getTime() - Date.now();
-  const deltaSeconds = Math.round(deltaMs / 1000);
-
-  const minutes = Math.round(deltaSeconds / 60);
-  const hours = Math.round(minutes / 60);
-  const days = Math.round(hours / 24);
-  const weeks = Math.round(days / 7);
-
-  if (Math.abs(deltaSeconds) < 60) return rtf.format(deltaSeconds, "second");
-  if (Math.abs(minutes) < 60) return rtf.format(minutes, "minute");
-  if (Math.abs(hours) < 24) return rtf.format(hours, "hour");
-  if (Math.abs(days) < 7) return rtf.format(days, "day");
-  return rtf.format(weeks, "week");
-}
-
-const ActivityItem = ({
-  title,
-  href,
-  subtitle,
-  isExternal,
-}: {
-  title: string;
-  href: string;
-  subtitle?: string;
-  isExternal?: boolean;
-}) => {
-  return (
-    <Box
-      p={4}
-      borderBottomWidth="1px"
-      borderColor="whiteAlpha.100"
-      _hover={{
-        bg: "rgba(14, 129, 68, 0.05)",
-      }}
-    >
-      <Link
-        href={href}
-        isExternal={isExternal}
-        color="white"
-        fontWeight="600"
-        title={title}
-        transition="all 1s"
-        _hover={{
-          textDecoration: "none",
-          color: "brand.primary",
-        }}
-      >
-        <Text isTruncated maxW="full" transition="color 0.3s">
-          {title}
-        </Text>
-      </Link>
-      {subtitle ? (
-        <Text color="whiteAlpha.600" fontSize="sm" mt={1}>
-          {subtitle}
-        </Text>
-      ) : null}
-    </Box>
-  );
-};
-
 const DUMMY_BENCHMARK_DATA = [
   { id: "1", name: "n = 2^20", runtime_ms: 0.05, gflops: 19.79 },
   { id: "2", name: "n = 2^22", runtime_ms: 0.2, gflops: 21.08 },
@@ -181,9 +90,8 @@ const DUMMY_BENCHMARK_DATA = [
 ];
 
 export default function HomePage() {
+  const { t } = useI18n();
   const [isMobile, setIsMobile] = useState(false);
-  const [activity, setActivity] = useState<LandingActivity | null>(null);
-  const [activityError, setActivityError] = useState(false);
 
   // State for animation sequence
   const [isTypingCode, setIsTypingCode] = useState(true); // Start with code typing
@@ -220,32 +128,8 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadActivity() {
-      try {
-        setActivityError(false);
-        const res = await fetch("/api/landing/activity", {
-          signal: controller.signal,
-        });
-
-        if (!res.ok) throw new Error(`Failed to load activity: ${res.status}`);
-        const json: LandingActivity = (await res.json()) as LandingActivity;
-        setActivity(json);
-      } catch (err) {
-        if (controller.signal.aborted) return;
-        console.error(err);
-        setActivityError(true);
-      }
-    }
-
-    void loadActivity();
-    return () => controller.abort();
-  }, []);
-
   return (
-    <Layout title="Home" ogImage="/tensara_ogimage.png">
+    <Layout title={t("home.title")} ogImage="/sdu-logo.svg">
       <Box color="white" minH="100vh" p={10}>
         {/* Hero Section */}
         <MotionBox
@@ -316,7 +200,7 @@ export default function HomePage() {
                     display="inline-block"
                     fontFamily="Space Grotesk, sans-serif"
                   >
-                    Optimize
+                    {t("home.hero.write")}
                   </MotionBox>
                   <MotionBox
                     initial={{ y: 20, opacity: 0 }}
@@ -334,7 +218,7 @@ export default function HomePage() {
                     w="100%"
                     fontFamily="Space Grotesk, sans-serif"
                   >
-                    Benchmark
+                    {t("home.hero.benchmark")}
                   </MotionBox>
                   <MotionBox
                     initial={{ y: 20, opacity: 0 }}
@@ -351,7 +235,7 @@ export default function HomePage() {
                     mt={2}
                     fontFamily="Space Grotesk, sans-serif"
                   >
-                    Repeat
+                    {t("home.hero.iterate")}
                   </MotionBox>
                 </Heading>
 
@@ -361,9 +245,7 @@ export default function HomePage() {
                   transition={{ duration: 0.5, delay: 0.8 }}
                 >
                   <Text fontSize="xl" color="whiteAlpha.800">
-                    A platform for GPU programming challenges. Write efficient
-                    GPU kernels and compare your solutions with other
-                    developers.
+                    {t("home.hero.copy")}
                   </Text>
                 </MotionBox>
 
@@ -396,97 +278,10 @@ export default function HomePage() {
                     >
                       <Icon as={FiCode} boxSize={5} color="white" />
                       <Text color="white" fontWeight="500">
-                        Start Solving
+                        {t("home.cta.start")}
                       </Text>
                     </Flex>
                   </Link>
-
-                  <Link
-                    href="https://github.com/tensara/tensara"
-                    isExternal
-                    style={{ textDecoration: "none" }}
-                    cursor="pointer"
-                  >
-                    <Flex
-                      align="center"
-                      bg="whiteAlpha.100"
-                      px={5}
-                      py={3}
-                      gap={2}
-                      borderRadius="lg"
-                      _hover={{
-                        bg: "whiteAlpha.200",
-                        transform: "translateY(-2px)",
-                      }}
-                      transition="all 0.2s"
-                    >
-                      <Icon as={FiStar} boxSize={5} color="white" />
-                      <Text color="white" fontWeight="500">
-                        GitHub
-                      </Text>
-                      {activity?.repoStars !== null &&
-                      activity?.repoStars !== undefined ? (
-                        <Box
-                          bg="whiteAlpha.200"
-                          px={2}
-                          py={0.5}
-                          borderRadius="md"
-                          fontSize="sm"
-                          color="whiteAlpha.900"
-                        >
-                          {activity.repoStars.toLocaleString()}
-                        </Box>
-                      ) : null}
-                    </Flex>
-                  </Link>
-
-                  <Link
-                    href="https://discord.gg/YzBTfMxVQK"
-                    style={{ textDecoration: "none" }}
-                    cursor="pointer"
-                  >
-                    <Flex
-                      align="center"
-                      bg="whiteAlpha.100"
-                      px={5}
-                      py={3}
-                      gap={2}
-                      borderRadius="lg"
-                      _hover={{
-                        bg: "whiteAlpha.200",
-                        transform: "translateY(-2px)",
-                      }}
-                      transition="all 0.2s"
-                    >
-                      <Icon as={FaDiscord} boxSize={5} color="white" />
-                      <Text color="white" fontWeight="500">
-                        Discord
-                      </Text>
-                    </Flex>
-                  </Link>
-                </MotionFlex>
-
-                <MotionFlex
-                  align="center"
-                  gap={2}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
-                >
-                  <Text color="whiteAlpha.600">
-                    Want to submit from your IDE? Check out our{" "}
-                    <Link
-                      href="https://tensara.org/cli"
-                      isExternal
-                      color="#2ecc71"
-                      textDecoration="underline"
-                      _hover={{
-                        color: "#27ae60",
-                      }}
-                    >
-                      CLI tool
-                    </Link>
-                  </Text>
                 </MotionFlex>
               </MotionVStack>
               {/* Right side container for animation - Adjusted for centering */}
@@ -542,275 +337,32 @@ export default function HomePage() {
           <VStack align="flex-start" spacing={16}>
             <VStack align="flex-start" spacing={4} maxW="2xl">
               <Heading fontSize={{ base: "2xl", md: "3xl" }} color="white">
-                Why Tensara?
+                {t("home.why.title")}
               </Heading>
               <Text color="whiteAlpha.800" fontSize="lg">
-                Tensara provides a unique platform for honing your GPU
-                programming skills through competitive challenges and detailed
-                benchmarking.
+                {t("home.why.copy")}
               </Text>
             </VStack>
 
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} w="full">
               <FeatureCard
                 icon={FiCpu}
-                title="Real Hardware Benchmarking"
-                description="Submissions are run on standardized GPU hardware for fair and accurate performance comparisons."
+                title={t("home.feature.hardware.title")}
+                description={t("home.feature.hardware.copy")}
               />
               <FeatureCard
-                icon={FiAward}
-                title="Competitive Leaderboards"
-                description="See how your solutions stack up against others on detailed leaderboards for each problem."
+                icon={FiCode}
+                title={t("home.feature.kernel.title")}
+                description={t("home.feature.kernel.copy")}
               />
               <FeatureCard
-                icon={FiUsers}
-                title="Community & Collaboration"
-                description="Discuss strategies, share insights, and learn from fellow GPU programming enthusiasts."
+                icon={FiBookOpen}
+                title={t("home.feature.signature.title")}
+                description={t("home.feature.signature.copy")}
               />
             </SimpleGrid>
           </VStack>
         </Container>
-        <Container
-          maxW="8xl"
-          display="flex"
-          justifyContent="center"
-          mt={4}
-          mb={8}
-        >
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            gap={{ base: 4, md: 6 }}
-            align="center"
-          >
-            <Text
-              fontSize={{ base: "30px", md: "35px" }}
-              fontWeight={500}
-              color="gray.500"
-            >
-              Powered by
-            </Text>
-            <Link isExternal href="https://modal.com/">
-              <Image
-                src="/Primary-Modal-Wordmark-Light.svg"
-                alt="Modal Logo"
-                height={{ base: "40px", md: "40px" }}
-                transition="all 0.2s ease-in-out"
-                _hover={{
-                  transform: "translateY(-1px)",
-                }}
-              />
-            </Link>
-          </Flex>
-        </Container>
-
-        {/* Activity Section */}
-        <Box py={16}>
-          <Container maxW="8xl">
-            <VStack align="flex-start" spacing={8}>
-              <Heading fontSize={{ base: "2xl", md: "3xl" }} color="white">
-                Latest Activity
-              </Heading>
-
-              <Text color="whiteAlpha.700" maxW="2xl">
-                Fresh PRs, new problems, and recent community submissions.
-              </Text>
-
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} w="full">
-                <Box
-                  bg="transparent"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  borderWidth="1px"
-                  borderColor="whiteAlpha.100"
-                >
-                  <Flex
-                    p={4}
-                    borderBottomWidth="1px"
-                    borderColor="brand.primary"
-                    align="center"
-                  >
-                    <Icon as={FiGitPullRequest} color="brand.primary" mr={2} />
-                    <Heading size="sm" color="white">
-                      Latest Changes
-                    </Heading>
-                    <Link
-                      href="https://github.com/tensara/tensara/pulls"
-                      isExternal
-                      ml="auto"
-                      color="whiteAlpha.600"
-                      fontSize="sm"
-                      _hover={{ color: "white" }}
-                    >
-                      View all
-                    </Link>
-                  </Flex>
-                  <Box>
-                    {activity ? (
-                      activity.prs.length ? (
-                        activity.prs.map((pr) => (
-                          <ActivityItem
-                            key={pr.number}
-                            title={pr.title}
-                            href={pr.url}
-                            isExternal
-                            subtitle={`${formatRelativeTime(pr.updatedAt)} · #${
-                              pr.number
-                            }`}
-                          />
-                        ))
-                      ) : (
-                        <ActivityItem
-                          title="No PRs found"
-                          href="https://github.com/tensara/tensara/pulls"
-                          isExternal
-                          subtitle="Check GitHub for the latest merged PRs"
-                        />
-                      )
-                    ) : activityError ? (
-                      <ActivityItem
-                        title="Activity unavailable"
-                        href="https://github.com/tensara/tensara/pulls"
-                        isExternal
-                        subtitle="Couldn’t load merged PRs right now"
-                      />
-                    ) : (
-                      <ActivityItem
-                        title="Loading…"
-                        href="https://github.com/tensara/tensara/pulls"
-                        isExternal
-                        subtitle="Fetching latest merged PRs"
-                      />
-                    )}
-                  </Box>
-                </Box>
-
-                <Box
-                  bg="transparent"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  borderWidth="1px"
-                  borderColor="whiteAlpha.100"
-                >
-                  <Flex
-                    p={4}
-                    borderBottomWidth="1px"
-                    borderColor="brand.primary"
-                    align="center"
-                  >
-                    <Icon as={FiBookOpen} color="brand.primary" mr={2} />
-                    <Heading size="sm" color="white">
-                      Latest Problems
-                    </Heading>
-                    <Link
-                      href="/problems"
-                      ml="auto"
-                      color="whiteAlpha.600"
-                      fontSize="sm"
-                      _hover={{ color: "white" }}
-                    >
-                      View all
-                    </Link>
-                  </Flex>
-                  <Box>
-                    {activity ? (
-                      activity.problems.length ? (
-                        activity.problems.map((problem) => (
-                          <ActivityItem
-                            key={problem.slug}
-                            title={problem.title}
-                            href={`/problems/${problem.slug}`}
-                            subtitle={`${problem.difficulty} · ${formatRelativeTime(
-                              problem.createdAt
-                            )}`}
-                          />
-                        ))
-                      ) : (
-                        <ActivityItem
-                          title="No problems found"
-                          href="/problems"
-                          subtitle="Create the first problem"
-                        />
-                      )
-                    ) : activityError ? (
-                      <ActivityItem
-                        title="Activity unavailable"
-                        href="/problems"
-                        subtitle="Couldn’t load problems right now"
-                      />
-                    ) : (
-                      <ActivityItem
-                        title="Loading…"
-                        href="/problems"
-                        subtitle="Fetching latest problems"
-                      />
-                    )}
-                  </Box>
-                </Box>
-
-                <Box
-                  bg="transparent"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  borderWidth="1px"
-                  borderColor="whiteAlpha.100"
-                >
-                  <Flex
-                    p={4}
-                    borderBottomWidth="1px"
-                    borderColor="brand.primary"
-                    align="center"
-                  >
-                    <Icon as={FiUsers} color="brand.primary" mr={2} />
-                    <Heading size="sm" color="white">
-                      Community Submissions
-                    </Heading>
-                    <Link
-                      href="/blog"
-                      ml="auto"
-                      color="whiteAlpha.600"
-                      fontSize="sm"
-                      _hover={{ color: "white" }}
-                    >
-                      View all
-                    </Link>
-                  </Flex>
-                  <Box>
-                    {activity ? (
-                      activity.blogPosts.length ? (
-                        activity.blogPosts.map((post) => (
-                          <ActivityItem
-                            key={post.slug}
-                            title={`${post.authorUsername ?? "Someone"} · ${post.title}`}
-                            href={`/blog/${post.slug}`}
-                            subtitle={formatRelativeTime(post.publishedAt)}
-                          />
-                        ))
-                      ) : (
-                        <ActivityItem
-                          title="No solution posts yet"
-                          href="/blog"
-                          subtitle="Be the first to publish a solution write-up"
-                        />
-                      )
-                    ) : activityError ? (
-                      <ActivityItem
-                        title="Activity unavailable"
-                        href="/blog"
-                        subtitle="Couldn’t load blog posts right now"
-                      />
-                    ) : (
-                      <ActivityItem
-                        title="Loading…"
-                        href="/blog"
-                        subtitle="Fetching latest blog posts"
-                      />
-                    )}
-                  </Box>
-                </Box>
-              </SimpleGrid>
-            </VStack>
-          </Container>
-        </Box>
 
         {/* Call to Action Section */}
         <Container maxW="8xl" py={20}>
@@ -840,7 +392,7 @@ export default function HomePage() {
                 fontFamily="Space Grotesk, sans-serif"
                 px={{ base: 2, md: 0 }}
               >
-                Ready to Optimize?
+                {t("home.cta.title")}
               </Heading>
               <Text
                 fontSize={{ base: "lg", md: "xl" }}
@@ -850,8 +402,7 @@ export default function HomePage() {
                 mx="auto"
                 px={{ base: 4, md: 0 }}
               >
-                Dive into our GPU programming challenges, submit your kernels,
-                and climb the leaderboards.
+                {t("home.cta.copy")}
               </Text>
               <Link
                 href="/problems"
@@ -877,7 +428,7 @@ export default function HomePage() {
                   border="1px solid rgba(255, 255, 255, 0.2)"
                   w={{ base: "full", md: "auto" }}
                 >
-                  Start Solving Now
+                  {t("home.cta.button")}
                 </Button>
               </Link>
             </Box>
@@ -889,110 +440,56 @@ export default function HomePage() {
           <Container maxW="8xl">
             {/* <Divider mb={10} borderColor="whiteAlpha.200" /> */}
             <SimpleGrid
-              columns={{ base: 1, sm: 2, md: 4 }}
+              columns={{ base: 1, sm: 2, md: 3 }}
               spacing={8}
               color="whiteAlpha.700"
             >
               {/* About */}
               <VStack align="flex-start" spacing={4}>
                 <Heading size="sm" color="white" mb={2}>
-                  Tensara
+                  SDUGPU
                 </Heading>
+                <Text fontSize="sm">{t("home.footer.copy")}</Text>
                 <Text fontSize="sm">
-                  GPU Programming Challenges & Benchmarking Platform
+                  {t("home.footer.adapted")}{" "}
+                  <Link
+                    href="https://github.com/tensara/tensara"
+                    isExternal
+                    color="white"
+                    textDecoration="underline"
+                  >
+                    Tensara
+                  </Link>{" "}
+                  {t("home.footer.adaptedSuffix")}
                 </Text>
-                {/* Social Icons */}
-                <Flex gap={4} mt={2}>
-                  <Link href="https://github.com/tensara/tensara" isExternal>
-                    <Icon
-                      as={FaGithub}
-                      boxSize={5}
-                      _hover={{ color: "white" }}
-                    />
-                  </Link>
-                  <Link href="https://x.com/tensarahq" isExternal>
-                    <Icon
-                      as={FaTwitter}
-                      boxSize={5}
-                      _hover={{ color: "white" }}
-                    />
-                  </Link>
-                  <Link href="https://discord.gg/YzBTfMxVQK" isExternal>
-                    <Icon
-                      as={FaDiscord}
-                      boxSize={5}
-                      _hover={{ color: "white" }}
-                    />
-                  </Link>
-                  <Link href="mailto:hello@tensara.org" isExternal>
-                    <Icon
-                      as={FaEnvelope}
-                      boxSize={5}
-                      _hover={{ color: "white" }}
-                    />
-                  </Link>
-                </Flex>
               </VStack>
 
               {/* Navigation */}
               <VStack align="flex-start" spacing={4}>
                 <Heading size="sm" color="white" mb={2}>
-                  Navigate
+                  {t("home.footer.nav")}
                 </Heading>
                 <Link href="/problems" _hover={{ color: "white" }}>
-                  Problems
-                </Link>
-                <Link href="/leaderboard" _hover={{ color: "white" }}>
-                  Leaderboards
-                </Link>
-                <Link href="/contests" _hover={{ color: "white" }}>
-                  Contests
-                </Link>
-                <Link href="/blog" _hover={{ color: "white" }}>
-                  Blog
-                </Link>
-                <Link href="/cli" _hover={{ color: "white" }}>
-                  CLI Tool
-                </Link>
-              </VStack>
-
-              {/* Resources */}
-              <VStack align="flex-start" spacing={4}>
-                <Heading size="sm" color="white" mb={2}>
-                  Resources
-                </Heading>
-                <Link
-                  href="https://discord.gg/YzBTfMxVQK"
-                  isExternal
-                  _hover={{ color: "white" }}
-                >
-                  Learn
-                </Link>
-                <Link
-                  href="https://github.com/orgs/tensara/projects/1"
-                  isExternal
-                  _hover={{ color: "white" }}
-                >
-                  Roadmap
+                  {t("nav.problems")}
                 </Link>
               </VStack>
 
               {/* Legal */}
               <VStack align="flex-start" spacing={4}>
                 <Heading size="sm" color="white" mb={2}>
-                  Legal
+                  {t("home.footer.legal")}
                 </Heading>
                 <Link href="/terms" _hover={{ color: "white" }}>
-                  Terms of Service
+                  {t("home.footer.terms")}
                 </Link>
                 <Link href="/privacy" _hover={{ color: "white" }}>
-                  Privacy Policy
+                  {t("home.footer.privacy")}
                 </Link>
               </VStack>
             </SimpleGrid>
             <Divider my={10} borderColor="whiteAlpha.200" />
             <Text textAlign="center" fontSize="sm">
-              &copy; {new Date().getFullYear()} Tensara. All rights reserved.
+              &copy; {new Date().getFullYear()} SDUGPU.
             </Text>
           </Container>
         </Box>

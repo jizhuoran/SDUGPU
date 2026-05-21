@@ -4,6 +4,7 @@ import {
   HStack,
   Text,
   Image,
+  Avatar,
   Button,
   Icon,
   IconButton,
@@ -23,10 +24,11 @@ import {
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FiGithub, FiMenu, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { LayoutGroup, motion } from "framer-motion";
 import React from "react";
+import { useI18n } from "~/i18n";
 
 interface HeaderProps {
   isCodingMode?: boolean;
@@ -35,6 +37,7 @@ interface HeaderProps {
 
 export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
   const { data: session, status } = useSession();
+  const { locale, toggleLocale, t } = useI18n();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isMobile, setIsMobile] = useState(false);
@@ -55,16 +58,10 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const navItems = [
-    { label: "Problems", href: "/problems" },
-    { label: "Sandbox", href: "/sandbox" },
-    { label: "Leaderboards", href: "/leaderboard" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contests", href: "/contests" },
-  ];
+  const navItems = [{ label: t("nav.problems"), href: "/problems" }];
 
   const handleSignIn = () => {
-    signIn("github", { callbackUrl: router.asPath }).catch(console.error);
+    signIn(undefined, { callbackUrl: router.asPath }).catch(console.error);
   };
 
   const handleSignOut = () => {
@@ -150,12 +147,13 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                     damping: 20,
                   }}
                 >
-                  <Image
-                    src={session.user?.image ?? ""}
-                    alt="Profile"
+                  <Avatar
+                    src={session.user?.image ?? undefined}
+                    name={session.user?.username ?? "User"}
                     w={8}
                     h={8}
-                    rounded="full"
+                    bg="whiteAlpha.200"
+                    color="white"
                     border="2px solid"
                     borderColor={menuIsOpen ? "brand.primary" : "transparent"}
                     transition="all 0.3s ease"
@@ -212,7 +210,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                 py={2}
                 borderRadius="md"
               >
-                My Profile
+                {t("auth.profile")}
               </MenuItem>
               <MenuItem
                 as={Link}
@@ -228,23 +226,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                 py={2}
                 borderRadius="md"
               >
-                Submissions
-              </MenuItem>
-              <MenuItem
-                as={Link}
-                href="/cli"
-                bg="transparent"
-                _hover={{
-                  bg: "rgba(75, 85, 99, 0.5)",
-                  transition: "all 0.3s ease-in-out",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                }}
-                transition="all 0.15s ease"
-                px={4}
-                py={2}
-                borderRadius="md"
-              >
-                CLI & API Keys
+                {t("auth.submissions")}
               </MenuItem>
               <MenuItem
                 onClick={handleSignOut}
@@ -259,7 +241,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                 py={2}
                 borderRadius="md"
               >
-                Sign Out
+                {t("auth.signOut")}
               </MenuItem>
             </MenuList>
           </Menu>
@@ -270,7 +252,6 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
             onClick={handleSignIn}
             size={isCodingMode ? "sm" : "md"}
             fontSize={isCodingMode ? "11px" : "sm"}
-            leftIcon={<Icon as={FiGithub} boxSize={isCodingMode ? 4 : 5} />}
             bg="#24292e"
             _hover={{
               bg: "#2f363d",
@@ -278,12 +259,28 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
             h={isCodingMode ? "30px" : undefined}
             px={isCodingMode ? 3 : undefined}
           >
-            Sign in with GitHub
+            {t("auth.signIn")}
           </Button>
         )}
       </>
     );
   };
+
+  const LanguageSwitch = () => (
+    <Button
+      variant="ghost"
+      color="whiteAlpha.900"
+      size={isCodingMode ? "sm" : "md"}
+      h={isCodingMode ? "30px" : undefined}
+      px={isCodingMode ? 2.5 : 3}
+      fontSize={isCodingMode ? "11px" : "sm"}
+      borderRadius="lg"
+      onClick={toggleLocale}
+      _hover={{ bg: "whiteAlpha.200", color: "white" }}
+    >
+      {locale === "zh" ? t("locale.en") : t("locale.zh")}
+    </Button>
+  );
 
   return (
     <Box
@@ -298,10 +295,10 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
           <Link href="/" passHref legacyBehavior>
             <HStack as="a">
               <Image
-                src="/logo_no_bg.png"
-                alt="Tensara Logo"
-                w={6}
-                h={6}
+                src="/sdu-logo.svg"
+                alt={t("a11y.logo")}
+                w={7}
+                h={7}
                 mr={1}
                 ml={2}
               />
@@ -312,7 +309,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                 fontFamily="DM Sans, -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
                 _hover={{ textDecoration: "none" }}
               >
-                tensara
+                SDUGPU
               </Text>
             </HStack>
           </Link>
@@ -327,7 +324,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
                 ml={2}
                 _hover={{ bg: "whiteAlpha.200", color: "white" }}
               >
-                All Problems
+                {t("nav.allProblems")}
               </Button>
             </Link>
           )}
@@ -341,7 +338,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
 
           {isCodingMode && (
             <IconButton
-              aria-label="Open menu"
+              aria-label={t("a11y.openMenu")}
               icon={<FiMenu />}
               variant="ghost"
               color="white"
@@ -368,7 +365,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
         {/* Mobile Menu Button */}
         {isMobile && !isCodingMode && (
           <IconButton
-            aria-label="Open menu"
+            aria-label={t("a11y.openMenu")}
             icon={<FiMenu />}
             variant="ghost"
             color="white"
@@ -377,7 +374,12 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
         )}
 
         {/* Desktop Auth Section */}
-        {!isMobile && <AuthSection />}
+        {!isMobile && (
+          <HStack spacing={isCodingMode ? 1 : 2}>
+            <LanguageSwitch />
+            <AuthSection />
+          </HStack>
+        )}
 
         {/* Mobile Drawer */}
         <Drawer
@@ -393,7 +395,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
             <DrawerCloseButton color="white" />
             {!isCodingMode && (
               <DrawerHeader borderBottomWidth="1px" color="white">
-                Menu
+                {t("nav.menu")}
               </DrawerHeader>
             )}
             <DrawerBody>
@@ -423,6 +425,7 @@ export function Header({ isCodingMode = false, toolbar }: HeaderProps) {
               ) : (
                 <VStack align="stretch" spacing={4} mt={4}>
                   <NavLinks />
+                  <LanguageSwitch />
                   <Box pt={4} borderTopWidth="1px">
                     <AuthSection />
                   </Box>

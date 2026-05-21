@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion"; // Keep imports for MotionBox/footer
 import { FaCheck } from "react-icons/fa";
+import { useI18n } from "~/i18n";
 
 // Define the structure for a single dummy benchmark result
 interface DummyBenchmarkResult {
@@ -38,6 +39,7 @@ const LandingBenchmarkDisplay: React.FC<LandingBenchmarkDisplayProps> = ({
   isVisible,
   dummyData,
 }) => {
+  const { locale } = useI18n();
   const [isTableOpen, setIsTableOpen] = useState(true);
   const [loadedRowCount, setLoadedRowCount] = useState(0);
   const [showFooter, setShowFooter] = useState(false);
@@ -156,7 +158,7 @@ const LandingBenchmarkDisplay: React.FC<LandingBenchmarkDisplayProps> = ({
           >
             <HStack spacing={2}>
               <Heading size="sm" fontWeight="semibold" color="white">
-                Benchmark Results
+                {locale === "zh" ? "评测结果" : "Benchmark Results"}
               </Heading>
               {hasAnimationStarted && !showFooter && (
                 <Spinner size="xs" color="gray.300" ml={2} />
@@ -175,13 +177,13 @@ const LandingBenchmarkDisplay: React.FC<LandingBenchmarkDisplayProps> = ({
               <Thead bg="whiteAlpha.100">
                 <Tr>
                   <Th color="whiteAlpha.700" py={3}>
-                    Test Case
+                    {locale === "zh" ? "测试用例" : "Test Case"}
                   </Th>
                   <Th color="whiteAlpha.700" py={3} isNumeric>
-                    Runtime
+                    {locale === "zh" ? "运行时间" : "Runtime"}
                   </Th>
                   <Th color="whiteAlpha.700" py={3} isNumeric>
-                    Performance
+                    {locale === "zh" ? "性能" : "Performance"}
                   </Th>
                 </Tr>
               </Thead>
@@ -236,7 +238,7 @@ const LandingBenchmarkDisplay: React.FC<LandingBenchmarkDisplayProps> = ({
               <HStack justify="space-between">
                 <Box>
                   <Text color="whiteAlpha.700" mb={1} fontSize="sm">
-                    Average Performance
+                    平均性能
                   </Text>
                   <Heading size="md" color="white">
                     {(
@@ -249,7 +251,7 @@ const LandingBenchmarkDisplay: React.FC<LandingBenchmarkDisplayProps> = ({
                 </Box>
                 <Box>
                   <Text color="whiteAlpha.700" mb={1} fontSize="sm">
-                    Average Runtime
+                    平均运行时间
                   </Text>
                   <Heading size="md" color="white">
                     {(

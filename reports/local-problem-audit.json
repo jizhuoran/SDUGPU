@@ -1,0 +1,994 @@
+{
+  "total": 84,
+  "passed": 52,
+  "failed": 32,
+  "missingSolution": 29,
+  "sourceRoot": "/tmp/tensara-problems",
+  "gpu": "RTX_4060_Ti",
+  "dockerImage": "tensara-engine",
+  "results": [
+    {
+      "slug": "argmax",
+      "title": "Argmax Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "argmin",
+      "title": "Argmin Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "array-sort",
+      "title": "Array Sorting",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "avg-pool-1d",
+      "title": "1D Average Pooling",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.39,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "box-blur",
+      "title": "Box Blur",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "conv-1d",
+      "title": "1D Convolution",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.61,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "cosine-similarity",
+      "title": "Cosine Similarity",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.39,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "diagonal-matmul",
+      "title": "Diagonal Matrix Multiplication",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "ecc-point-negation",
+      "title": "ECC Point Negation (Batched)",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "edge-detect",
+      "title": "Edge Detection",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "elu",
+      "title": "ELU",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "frobenius-norm",
+      "title": "Frobenius Normalization",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.36,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "gelu",
+      "title": "GELU",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": false,
+      "seconds": 1.41,
+      "statuses": [
+        "FAILED"
+      ],
+      "finalStatus": "FAILED"
+    },
+    {
+      "slug": "grayscale",
+      "title": "Grayscale Conversion",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "hard-sigmoid",
+      "title": "Hard Sigmoid",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "hinge-loss",
+      "title": "Hinge Loss",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "histogram",
+      "title": "Image Histogram",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "huber-loss",
+      "title": "Huber Loss",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "l1-norm",
+      "title": "L1 Normalization",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "l2-norm",
+      "title": "L2 Normalization",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "leaky-relu",
+      "title": "Leaky ReLU",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "log-softmax",
+      "title": "Log Softmax",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": false,
+      "seconds": 1.39,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "The expanded size of the tensor (8) must match the existing size (32) at non-singleton dimension 1.  Target sizes: [4, 8].  Tensor sizes: [32]",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 222, in run_sample_case\n    solution_func(*parameters)\n  File \"/tmp/tmpi11hzht6/triton_solution.py\", line 4, in solution\n    output[:] = torch.nn.functional.log_softmax(input.view(M, N), dim=1).view(-1)\n    ~~~~~~^^^\nRuntimeError: The expanded size of the tensor (8) must match the existing size (32) at non-singleton dimension 1.  Target sizes: [4, 8].  Tensor sizes: [32]\n"
+    },
+    {
+      "slug": "matrix-scalar",
+      "title": "Matrix Scalar Multiplication",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matrix-vector",
+      "title": "Matrix Vector Multiplication",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "max-dim",
+      "title": "Max Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "max-pool-1d",
+      "title": "1D Max Pooling",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mean-dim",
+      "title": "Mean Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "min-dim",
+      "title": "Min Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.37,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mse_loss",
+      "title": "Mean Squared Error Loss",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "mxfp4-dequantize",
+      "title": "MXFP4 Dequantization",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "mxfp8-dequantize",
+      "title": "MXFP8 Dequantization",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "product-dim",
+      "title": "Product Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.84,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "relu",
+      "title": "ReLU",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "rms-norm",
+      "title": "RMS Normalization",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.46,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "running-sum-1d",
+      "title": "1D Running Sum",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "selu",
+      "title": "SELU",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "sigmoid",
+      "title": "Sigmoid",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "soft-plus",
+      "title": "Softplus",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.39,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "sum-dim",
+      "title": "Sum Over Dimension",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "swish",
+      "title": "Swish",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "tanh",
+      "title": "Tanh",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.39,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "threshold",
+      "title": "Image Thresholding",
+      "difficulty": "EASY",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "vector-addition",
+      "title": "Vector Addition",
+      "difficulty": "EASY",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.46,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "all-pairs-shortest-path",
+      "title": "All-Pairs Shortest Path",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "avg-pool-2d",
+      "title": "2D Average Pooling",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.34,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "batch-norm",
+      "title": "Batch Normalization",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "conv-2d",
+      "title": "2D Convolution",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "conv2d-relu-hardswish",
+      "title": "2D Convolution with ReLU and HardSwish",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "cumprod",
+      "title": "Cumulative Product",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.37,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "cumsum",
+      "title": "Cumulative Sum",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "gemm-multiply-leakyrelu",
+      "title": "GEMM with Element-wise Multiply and LeakyReLU",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "gemm-relu",
+      "title": "GEMM with Bias and ReLU",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.42,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "kl-loss",
+      "title": "Kullback-Leibler Divergence",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "layer-norm",
+      "title": "Layer Normalization",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.43,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "lower-trig-matmul",
+      "title": "Lower Triangular Matrix Multiplication",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.46,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-sigmoid-sum",
+      "title": "Matrix Multiplication with Sigmoid and Sum",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "matmul-swish",
+      "title": "Matrix Multiplication with Swish Activation",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.38,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-swish-scaling",
+      "title": "Matrix Multiplication with Swish and Scaling",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "matrix-multiplication",
+      "title": "Matrix Multiplication",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matrix-power",
+      "title": "Matrix Nth Power",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "max-pool-2d",
+      "title": "2D Max Pooling",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.39,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "min-spanning-tree",
+      "title": "Minimum Spanning Tree",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "mxfp4-quantize",
+      "title": "MXFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "mxfp8-quantize",
+      "title": "MXFP8 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "nvfp4-dequantize",
+      "title": "NVFP4 Dequantization",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "nvfp4-quantize",
+      "title": "NVFP4 Quantization",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "poly-multiply-ff",
+      "title": "Polynomial Multiplication over Finite Field ",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "shortest-path",
+      "title": "Single Source Shortest Path",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "softmax",
+      "title": "Softmax",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "square-matmul",
+      "title": "Square Matrix Multiplication",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "symmetric-matmul",
+      "title": "Symmetric Matrix Multiplication",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.48,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "triplet-margin",
+      "title": "Triplet Margin Loss",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": false,
+      "seconds": 1.41,
+      "statuses": [
+        "ERROR"
+      ],
+      "finalStatus": "ERROR",
+      "message": "invalid index of a 0-dim tensor. Use `tensor.item()` in Python or `tensor.item<T>()` in C++ to convert a 0-dim tensor to a number",
+      "details": "Traceback (most recent call last):\n  File \"/app/runner.py\", line 222, in run_sample_case\n    solution_func(*parameters)\n  File \"/tmp/tmp7_zzjh7i/triton_solution.py\", line 4, in solution\n    loss[0] = torch.nn.functional.triplet_margin_loss(\n    ~~~~^^^\nIndexError: invalid index of a 0-dim tensor. Use `tensor.item()` in Python or `tensor.item<T>()` in C++ to convert a 0-dim tensor to a number\n"
+    },
+    {
+      "slug": "upper-trig-matmul",
+      "title": "Upper Triangular Matrix Multiplication",
+      "difficulty": "MEDIUM",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.4,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "vector-multiply-ff",
+      "title": "Vector Multiplication over Finite Field",
+      "difficulty": "MEDIUM",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "avg-pool-3d",
+      "title": "3D Average Pooling",
+      "difficulty": "HARD",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "conv-square-3d",
+      "title": "3D Square Convolution",
+      "difficulty": "HARD",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.44,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-3d",
+      "title": "3D Tensor-Matrix Multiplication",
+      "difficulty": "HARD",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "matmul-4d",
+      "title": "4D Tensor-Matrix Multiplication",
+      "difficulty": "HARD",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.45,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "max-pool-3d",
+      "title": "3D Max Pooling",
+      "difficulty": "HARD",
+      "solution": "torch.py",
+      "ok": true,
+      "seconds": 1.41,
+      "statuses": [
+        "PASSED"
+      ],
+      "finalStatus": "PASSED"
+    },
+    {
+      "slug": "mxfp4-gemm",
+      "title": "MXFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "mxfp8-gemm",
+      "title": "MXFP8 GEMM",
+      "difficulty": "HARD",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "nvfp4-gemm",
+      "title": "NVFP4 GEMM",
+      "difficulty": "HARD",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "nvfp4-gemv",
+      "title": "NVFP4 GEMV",
+      "difficulty": "HARD",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    },
+    {
+      "slug": "scaled-dot-attention",
+      "title": "Scaled Dot-Product Attention",
+      "difficulty": "HARD",
+      "solution": "missing",
+      "ok": false,
+      "seconds": 0,
+      "statuses": [],
+      "finalStatus": null,
+      "message": "No torch.py baseline solution in upstream problem folder."
+    }
+  ]
+}

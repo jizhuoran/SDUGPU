@@ -9,6 +9,10 @@ import {
 import { FORBIDDEN_PATTERNS } from "~/constants/forbidden";
 
 /** Parameter.type is always C-style (float, int, size_t, uint64_t, etc.). */
+function hasFlag(value: string | boolean | undefined): boolean {
+  return value === true || value === "true";
+}
+
 function resolveCppType(type: string): string {
   return CPP_TYPES[type] ?? type;
 }
@@ -32,13 +36,13 @@ export const generateStarterCode = (
   if (language === "cuda") {
     const names = parameters
       .map((parameter: Parameter) =>
-        parameter.pointer === "true" ? parameter.name : null
+        hasFlag(parameter.pointer) ? parameter.name : null
       )
       .filter(Boolean);
     const paramStr = parameters
       .map(
         (parameter: Parameter) =>
-          `${parameter.const === "true" ? "const " : ""}${resolveCppType(parameter.type)}${parameter.pointer === "true" ? "*" : ""} ${parameter.name}`
+          `${hasFlag(parameter.const) ? "const " : ""}${resolveCppType(parameter.type)}${hasFlag(parameter.pointer) ? "*" : ""} ${parameter.name}`
       )
       .join(", ");
     const paramTypes = new Set(parameters.map((p) => p.type));
@@ -62,13 +66,13 @@ extern "C" void solution(${paramStr}) {
   if (language === "python") {
     const names = parameters
       .map((parameter: Parameter) =>
-        parameter.pointer === "true" ? parameter.name : null
+        hasFlag(parameter.pointer) ? parameter.name : null
       )
       .filter(Boolean);
     const paramStr = parameters
       .map(
         (parameter: Parameter) =>
-          `${parameter.name}${parameter.pointer === "true" ? "" : `: ${resolvePythonType(parameter.type)}`}`
+          `${parameter.name}${hasFlag(parameter.pointer) ? "" : `: ${resolvePythonType(parameter.type)}`}`
       )
       .join(", ");
     return `import triton
@@ -81,13 +85,13 @@ def solution(${paramStr}):
   if (language === "pyptx") {
     const names = parameters
       .map((parameter: Parameter) =>
-        parameter.pointer === "true" ? parameter.name : null
+        hasFlag(parameter.pointer) ? parameter.name : null
       )
       .filter(Boolean);
     const paramStr = parameters
       .map(
         (parameter: Parameter) =>
-          `${parameter.name}${parameter.pointer === "true" ? "" : `: ${resolvePythonType(parameter.type)}`}`
+          `${parameter.name}${hasFlag(parameter.pointer) ? "" : `: ${resolvePythonType(parameter.type)}`}`
       )
       .join(", ");
     return `from pyptx import kernel, ptx, reg, Tile
@@ -100,7 +104,7 @@ def solution(${paramStr}):
     `;
   }
   if (language === "mojo") {
-    const pointerParams = parameters.filter((p) => p.pointer === "true");
+    const pointerParams = parameters.filter((p) => hasFlag(p.pointer));
     const names = pointerParams.map((p) => p.name).filter(Boolean);
     const uniquePtrTypes = [...new Set(pointerParams.map((p) => p.type))];
     const usesDType = pointerParams.length > 0;
@@ -117,7 +121,7 @@ def solution(${paramStr}):
 
     const paramStr = parameters
       .map((p) =>
-        p.pointer === "true"
+        hasFlag(p.pointer)
           ? `${p.name}_addr: Int`
           : `${p.name}: ${resolveMojoType(p.type)}`
       )
@@ -150,13 +154,13 @@ ${pointerSetup ? pointerSetup + "\n" : ""}    `;
   if (language == "cute") {
     const names = parameters
       .map((parameter: Parameter) =>
-        parameter.pointer === "true" ? parameter.name : null
+        hasFlag(parameter.pointer) ? parameter.name : null
       )
       .filter(Boolean);
     const paramStr = parameters
       .map(
         (parameter: Parameter) =>
-          `${parameter.name}${parameter.pointer === "true" ? `: cute.Tensor` : `: ${resolveCuteType(parameter.type)}`}`
+          `${parameter.name}${hasFlag(parameter.pointer) ? `: cute.Tensor` : `: ${resolveCuteType(parameter.type)}`}`
       )
       .filter(Boolean)
       .join(", ");
@@ -171,13 +175,13 @@ def solution(${paramStr}):
   if (language === "cutile") {
     const names = parameters
       .map((parameter: Parameter) =>
-        parameter.pointer === "true" ? parameter.name : null
+        hasFlag(parameter.pointer) ? parameter.name : null
       )
       .filter(Boolean);
     const paramStr = parameters
       .map(
         (parameter: Parameter) =>
-          `${parameter.name}${parameter.pointer === "true" ? "" : `: ${resolvePythonType(parameter.type)}`}`
+          `${parameter.name}${hasFlag(parameter.pointer) ? "" : `: ${resolvePythonType(parameter.type)}`}`
       )
       .join(", ");
     return `import cuda.tile as ct

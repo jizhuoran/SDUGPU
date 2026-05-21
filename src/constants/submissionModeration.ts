@@ -1,11 +1,11 @@
 export const SUBMISSION_MODERATION_LABELS = {
-  SUSPICIOUS: "Under Review",
-  INVALIDATED: "Invalidated",
+  SUSPICIOUS: "审核中",
+  INVALIDATED: "已作废",
 } as const;
 
 export const SUBMISSION_MODERATION_TOOLTIPS = {
   SUSPICIOUS:
-    "This submission was flagged as suspicious. It is temporarily hidden from leaderboards while the developers review it.",
+    "这次提交被标记为可疑。在开发者审核期间，它会暂时从公开展示中隐藏。",
   INVALIDATED:
-    "This submission was removed by the developers and no longer counts toward public or competitive views. Please reach out to the developers on Discord if you have any questions about this submission.",
+    "这次提交已被开发者移除，不再计入公开展示或评测结果。如有疑问，请联系维护者。",
 } as const;

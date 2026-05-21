@@ -24,7 +24,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import superjson from "superjson";
@@ -32,7 +31,6 @@ import { useHotkey } from "~/hooks/useHotKey";
 
 import type { GetServerSideProps } from "next";
 import { type Problem, type Submission } from "@prisma/client";
-import NextLink from "next/link";
 
 import { Layout } from "~/components/layout";
 import MySubmissions from "~/components/problem/MySubmissions";
@@ -79,6 +77,8 @@ import {
   isLanguageSupportedOnGpu,
   LANGUAGE_DISPLAY_NAMES,
 } from "~/constants/language";
+import { useI18n } from "~/i18n";
+import { getProblemTitle } from "~/i18n/problem-content";
 
 type ViewType = "submissions" | "problem" | "result";
 
@@ -93,7 +93,8 @@ const hasFlag = (value: string | boolean | undefined) =>
   value === true || value === "true";
 
 const getParameterDisplayType = (parameter: ProblemParameter) => {
-  return parameter.type;
+  const type = `${hasFlag(parameter.const) ? "const " : ""}${parameter.type}`;
+  return hasFlag(parameter.pointer) ? `${type}*` : type;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -133,6 +134,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function ProblemPage({ slug }: { slug: string }) {
+  const { locale, t } = useI18n();
   const { data: session } = useSession();
   const toast = useToast();
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -187,11 +189,9 @@ export default function ProblemPage({ slug }: { slug: string }) {
     setSelectedLanguage,
     isCodeDirty,
     handleReset,
-    savedGpuType,
     hasLoadedPreferences,
   } = useCodePersistence(slug, problem as Problem);
 
-  const [selectedGpuType, setSelectedGpuType] = useState("T4");
   const [isVimModeEnabled, setIsVimModeEnabled] = useState(false);
   const [hasLoadedVimPreference, setHasLoadedVimPreference] = useState(false);
 
@@ -207,33 +207,18 @@ export default function ProblemPage({ slug }: { slug: string }) {
         : Object.keys(GPU_DISPLAY_NAMES).filter((gpu) => gpu !== "all"),
     [allowedGpus]
   );
+  const localGpuType = baseGpuOptions[0] ?? "RTX_4060_Ti";
 
   const languageGpuError = useMemo(
-    () => getLanguageGpuSupportError(selectedLanguage, selectedGpuType),
-    [selectedLanguage, selectedGpuType]
+    () => getLanguageGpuSupportError(selectedLanguage, localGpuType),
+    [selectedLanguage, localGpuType]
   );
 
-  // Update GPU type when saved preferences are loaded
   useEffect(() => {
-    if (savedGpuType) {
-      setSelectedGpuType(savedGpuType);
-    }
-  }, [savedGpuType]);
-
-  // If problem restricts GPUs and current selection isn't allowed, pick first allowed
-  useEffect(() => {
-    setSelectedGpuType((current) =>
-      baseGpuOptions.length === 0 || baseGpuOptions.includes(current)
-        ? current
-        : (baseGpuOptions[0] ?? current)
-    );
-  }, [baseGpuOptions]);
-
-  useEffect(() => {
-    if (!isLanguageSupportedOnGpu(selectedLanguage, selectedGpuType)) {
+    if (!isLanguageSupportedOnGpu(selectedLanguage, localGpuType)) {
       setSelectedLanguage("cuda");
     }
-  }, [selectedLanguage, selectedGpuType, setSelectedLanguage]);
+  }, [selectedLanguage, localGpuType, setSelectedLanguage]);
 
   useEffect(() => {
     const stored = loadVimModePreference();
@@ -376,19 +361,12 @@ export default function ProblemPage({ slug }: { slug: string }) {
     if (toast.isActive(toastId)) return;
     toast({
       id: toastId,
-      title: "Need help?",
-      description: (
-        <>
-          <ChakraLink as={NextLink} href="/blog" textDecoration="underline">
-            Post a question on our blog
-          </ChakraLink>{" "}
-          to get tips from the community.
-        </>
-      ),
+      title: t("problem.toast.helpTitle"),
+      description: t("problem.toast.helpCopy"),
       duration: 5000,
       isClosable: true,
     });
-  }, [toast]);
+  }, [toast, t]);
 
   useEffect(() => {
     if (
@@ -466,13 +444,13 @@ export default function ProblemPage({ slug }: { slug: string }) {
   }, [submissionSassContent, sassContent]);
 
   useEffect(() => {
-    if (hasLoadedPreferences && slug && selectedLanguage && selectedGpuType) {
+    if (hasLoadedPreferences && slug && selectedLanguage && localGpuType) {
       savePreferences(slug, {
         language: selectedLanguage,
-        gpuType: selectedGpuType,
+        gpuType: localGpuType,
       });
     }
-  }, [slug, selectedLanguage, selectedGpuType, hasLoadedPreferences]);
+  }, [slug, selectedLanguage, localGpuType, hasLoadedPreferences]);
 
   // Handle submission
   const handleSubmit = useCallback(() => {
@@ -482,8 +460,8 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
     if (!session?.user) {
       toast({
-        title: "Not signed in",
-        description: "Please sign in to submit solutions",
+        title: t("problem.toast.loginTitle"),
+        description: t("problem.toast.loginSubmit"),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -493,7 +471,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
     if (languageGpuError) {
       toast({
-        title: "Unsupported GPU",
+        title: t("problem.toast.unsupportedGpu"),
         description: languageGpuError,
         status: "error",
         duration: 5000,
@@ -505,7 +483,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
     const { valid, error } = validateCode(code, selectedLanguage);
     if (!valid) {
       toast({
-        title: "Invalid code",
+        title: t("problem.toast.invalidCode"),
         description: error,
         status: "error",
         duration: 5000,
@@ -521,20 +499,21 @@ export default function ProblemPage({ slug }: { slug: string }) {
       problemSlug: slug,
       code: code,
       language: selectedLanguage,
-      gpuType: selectedGpuType,
+      gpuType: localGpuType,
     });
   }, [
     session?.user,
     slug,
     code,
     selectedLanguage,
-    selectedGpuType,
+    localGpuType,
     processSubmission,
     startSubmission,
     setViewType,
     HORIZONTAL_DEFAULT_RATIO,
     languageGpuError,
     toast,
+    t,
   ]);
   const handleRun = useCallback(async () => {
     setHorizontalSplitRatio((current) =>
@@ -547,8 +526,8 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
     if (!session?.user) {
       toast({
-        title: "Not signed in",
-        description: "Please sign in to run solutions",
+        title: t("problem.toast.loginTitle"),
+        description: t("problem.toast.loginRun"),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -558,7 +537,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
     if (languageGpuError) {
       toast({
-        title: "Unsupported GPU",
+        title: t("problem.toast.unsupportedGpu"),
         description: languageGpuError,
         status: "error",
         duration: 5000,
@@ -570,7 +549,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
     const { valid, error } = validateCode(code, selectedLanguage);
     if (!valid) {
       toast({
-        title: "Invalid code",
+        title: t("problem.toast.invalidCode"),
         description: error,
         status: "error",
         duration: 5000,
@@ -582,7 +561,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
     await startSampleRun({
       code,
       language: selectedLanguage,
-      gpuType: selectedGpuType,
+      gpuType: localGpuType,
       problemSlug: slug,
     });
   }, [
@@ -591,20 +570,21 @@ export default function ProblemPage({ slug }: { slug: string }) {
     session?.user,
     code,
     selectedLanguage,
-    selectedGpuType,
+    localGpuType,
     slug,
     HORIZONTAL_DEFAULT_RATIO,
     LEFT_CONSOLE_DEFAULT_RATIO,
     languageGpuError,
     toast,
+    t,
   ]);
 
   // Cmd+Enter to submit
   useHotkey("meta+enter", () => {
     if (isSubmitting) {
       toast({
-        title: "Already submitting",
-        description: "Please wait for the submission to complete",
+        title: t("problem.toast.submitting"),
+        description: t("problem.toast.waitSubmit"),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -618,8 +598,8 @@ export default function ProblemPage({ slug }: { slug: string }) {
   useHotkey("meta+'", () => {
     if (isRunning) {
       toast({
-        title: "Already running",
-        description: "Please wait for the sample run to complete",
+        title: t("problem.toast.running"),
+        description: t("problem.toast.waitRun"),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -635,7 +615,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <Layout title="Loading...">
+      <Layout title="加载中...">
         <Box
           display="flex"
           justifyContent="center"
@@ -650,13 +630,19 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
   if (!problem) {
     return (
-      <Layout title="Not Found">
+      <Layout title={t("problem.notFoundTitle")}>
         <Box p={8}>
-          <Text>Problem not found</Text>
+          <Text>{t("problem.notFound")}</Text>
         </Box>
       </Layout>
     );
   }
+
+  const localizedProblemTitle = getProblemTitle(
+    problem.slug,
+    problem.title,
+    locale
+  );
 
   const leftInnerContent = (() => {
     switch (viewType) {
@@ -685,6 +671,8 @@ export default function ProblemPage({ slug }: { slug: string }) {
             submissionId={submissionId}
             onViewFlops={onFlopsModalOpen}
             hasFlopsCode={!!(problem as { getFlops?: string | null }).getFlops}
+            problemSlug={slug}
+            gpuType={localGpuType}
           />
         ) : null;
       default:
@@ -692,6 +680,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
           <ProblemView
             problem={problem}
             onViewSubmissions={() => setViewType("submissions")}
+            onViewReference={onOpen}
           />
         );
     }
@@ -732,16 +721,12 @@ export default function ProblemPage({ slug }: { slug: string }) {
         minBottomHeight={0}
         allowCollapse
         snapOffsetPx={16}
-        collapsedTopLabel="Problem"
-        collapsedBottomLabel="Console"
+        collapsedTopLabel={t("problem.problemPanel")}
+        collapsedBottomLabel={t("problem.console")}
       />
     </Box>
   );
 
-  const gpuOptions = Object.entries(GPU_DISPLAY_NAMES).filter(
-    ([key]) =>
-      key !== "all" && (!allowedGpus?.length || allowedGpus.includes(key))
-  );
   const editorToolbar = (
     <HStack
       h="38px"
@@ -758,68 +743,22 @@ export default function ProblemPage({ slug }: { slug: string }) {
       <Flex w="100%" minW="0" align="center" justify="space-between" gap={2}>
         <HStack spacing={1.5} flexShrink={0}>
           <HStack spacing={0.5} flexShrink={0}>
-            <Menu>
-              <MenuButton
-                as={Button}
-                size="sm"
-                rightIcon={<FaChevronDown size={12} color="#a1a1aa" />}
-                bg="whiteAlpha.50"
-                _hover={{ bg: "whiteAlpha.100", borderColor: "gray.600" }}
-                _active={{ bg: "whiteAlpha.150" }}
-                _focus={{ borderColor: "blue.500", boxShadow: "none" }}
-                color="white"
-                h="30px"
-                w={{ base: "140px", md: "176px" }}
-                justifyContent="flex-start"
-                textAlign="left"
-                fontSize="sm"
-                fontWeight="normal"
-                borderRadius="lg"
-                px={2.5}
-                flexShrink={0}
-              >
-                {GPU_DISPLAY_NAMES[selectedGpuType]}
-              </MenuButton>
-              <MenuList
-                bg="brand.secondary"
-                borderColor="gray.800"
-                p={0}
-                minW="186px"
-              >
-                {gpuOptions.map(([key, value]) => {
-                  const isDisabled = !isLanguageSupportedOnGpu(
-                    selectedLanguage,
-                    key
-                  );
-                  const disabledReason = getLanguageGpuSupportError(
-                    selectedLanguage,
-                    key
-                  );
-                  return (
-                    <Tooltip
-                      key={key}
-                      label={disabledReason ?? ""}
-                      isDisabled={!isDisabled}
-                      placement="right"
-                    >
-                      <MenuItem
-                        onClick={() => setSelectedGpuType(key)}
-                        bg="brand.secondary"
-                        _hover={{
-                          bg: isDisabled ? "brand.secondary" : "gray.700",
-                        }}
-                        color={isDisabled ? "gray.500" : "white"}
-                        borderRadius="md"
-                        fontSize="sm"
-                        isDisabled={isDisabled}
-                      >
-                        {value}
-                      </MenuItem>
-                    </Tooltip>
-                  );
-                })}
-              </MenuList>
-            </Menu>
+            <HStack
+              h="30px"
+              px={2.5}
+              spacing={2}
+              bg="whiteAlpha.50"
+              borderRadius="lg"
+              color="white"
+              flexShrink={0}
+            >
+              <Text fontSize="xs" color="gray.400" whiteSpace="nowrap">
+                {t("problem.gpu")}
+              </Text>
+              <Text fontSize="sm" whiteSpace="nowrap">
+                {GPU_DISPLAY_NAMES[localGpuType] ?? localGpuType}
+              </Text>
+            </HStack>
             <GpuInfoModal compact />
           </HStack>
 
@@ -874,31 +813,28 @@ export default function ProblemPage({ slug }: { slug: string }) {
                 </MenuItem>
                 <Tooltip
                   label={
-                    getLanguageGpuSupportError("pyptx", selectedGpuType) ?? ""
+                    getLanguageGpuSupportError("pyptx", localGpuType) ?? ""
                   }
-                  isDisabled={isLanguageSupportedOnGpu(
-                    "pyptx",
-                    selectedGpuType
-                  )}
+                  isDisabled={isLanguageSupportedOnGpu("pyptx", localGpuType)}
                   placement="right"
                 >
                   <MenuItem
                     onClick={() => setSelectedLanguage("pyptx")}
                     bg="brand.secondary"
                     _hover={{
-                      bg: isLanguageSupportedOnGpu("pyptx", selectedGpuType)
+                      bg: isLanguageSupportedOnGpu("pyptx", localGpuType)
                         ? "gray.700"
                         : "brand.secondary",
                     }}
                     color={
-                      isLanguageSupportedOnGpu("pyptx", selectedGpuType)
+                      isLanguageSupportedOnGpu("pyptx", localGpuType)
                         ? "white"
                         : "gray.500"
                     }
                     borderRadius="md"
                     fontSize="sm"
                     isDisabled={
-                      !isLanguageSupportedOnGpu("pyptx", selectedGpuType)
+                      !isLanguageSupportedOnGpu("pyptx", localGpuType)
                     }
                   >
                     PyPTX
@@ -926,31 +862,28 @@ export default function ProblemPage({ slug }: { slug: string }) {
                 </MenuItem>
                 <Tooltip
                   label={
-                    getLanguageGpuSupportError("cutile", selectedGpuType) ?? ""
+                    getLanguageGpuSupportError("cutile", localGpuType) ?? ""
                   }
-                  isDisabled={isLanguageSupportedOnGpu(
-                    "cutile",
-                    selectedGpuType
-                  )}
+                  isDisabled={isLanguageSupportedOnGpu("cutile", localGpuType)}
                   placement="right"
                 >
                   <MenuItem
                     onClick={() => setSelectedLanguage("cutile")}
                     bg="brand.secondary"
                     _hover={{
-                      bg: isLanguageSupportedOnGpu("cutile", selectedGpuType)
+                      bg: isLanguageSupportedOnGpu("cutile", localGpuType)
                         ? "gray.700"
                         : "brand.secondary",
                     }}
                     color={
-                      isLanguageSupportedOnGpu("cutile", selectedGpuType)
+                      isLanguageSupportedOnGpu("cutile", localGpuType)
                         ? "white"
                         : "gray.500"
                     }
                     borderRadius="md"
                     fontSize="sm"
                     isDisabled={
-                      !isLanguageSupportedOnGpu("cutile", selectedGpuType)
+                      !isLanguageSupportedOnGpu("cutile", localGpuType)
                     }
                   >
                     cuTile Python
@@ -964,16 +897,12 @@ export default function ProblemPage({ slug }: { slug: string }) {
           <LanguageResources language={selectedLanguage} />
 
           <Tooltip
-            label={
-              parameters.length > 0
-                ? "View parameters"
-                : "No parameters available"
-            }
+            label={parameters.length > 0 ? t("problem.params") : t("problem.noParams")}
             hasArrow
             placement="bottom"
           >
             <IconButton
-              aria-label="View parameters"
+              aria-label={t("problem.params")}
               icon={<FiList size={14} />}
               size="sm"
               variant="ghost"
@@ -992,14 +921,14 @@ export default function ProblemPage({ slug }: { slug: string }) {
           <Tooltip
             label={
               problem.referenceSolution
-                ? "View reference"
-                : "No reference available"
+                ? t("problem.viewReference")
+                : t("problem.noReference")
             }
             hasArrow
             placement="bottom"
           >
             <IconButton
-              aria-label="View reference"
+              aria-label={t("problem.viewReference")}
               icon={<FiBookOpen size={14} />}
               size="sm"
               variant="ghost"
@@ -1034,7 +963,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
                   color: "white",
                 }}
               >
-                {isPtxSassOpen ? "Hide PTX/SASS" : "View PTX/SASS"}
+                {isPtxSassOpen ? t("problem.hidePtx") : t("problem.showPtx")}
               </Button>
             </Box>
           )}
@@ -1056,12 +985,12 @@ export default function ProblemPage({ slug }: { slug: string }) {
                 color: "white",
               }}
             >
-              Reset Code
+              {t("problem.resetCode")}
             </Button>
           )}
 
           <IconButton
-            aria-label="Toggle Vim mode"
+            aria-label={t("problem.vim")}
             icon={
               <Text fontSize="xs" fontWeight="500">
                 Vim
@@ -1100,7 +1029,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
           size="sm"
           onClick={handleRun}
           isLoading={isRunning}
-          loadingText="Run"
+          loadingText={t("problem.run")}
           spinner={<></>}
           disabled={isRunning || !!languageGpuError}
           borderRadius="lg"
@@ -1117,7 +1046,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
             bg: "rgba(59, 130, 246, 0.25)",
           }}
         >
-          Run
+          {t("problem.run")}
         </Button>
       </Tooltip>
       <Tooltip
@@ -1134,7 +1063,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
           size="sm"
           onClick={handleSubmit}
           isLoading={isSubmitting}
-          loadingText="Submit"
+          loadingText={t("problem.submit")}
           spinner={<></>}
           disabled={isSubmitting || !!languageGpuError}
           borderRadius="lg"
@@ -1151,7 +1080,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
             bg: "rgba(34, 197, 94, 0.25)",
           }}
         >
-          Submit
+          {t("problem.submit")}
         </Button>
       </Tooltip>
     </HStack>
@@ -1199,11 +1128,10 @@ export default function ProblemPage({ slug }: { slug: string }) {
       <VStack spacing={4} align="center">
         <Icon as={FaExclamationCircle} boxSize={10} color="yellow.400" />
         <Heading size="md" textAlign="center">
-          Desktop Required for Code Submission
+          {t("problem.mobileTitle")}
         </Heading>
         <Text textAlign="center" color="whiteAlpha.800">
-          For the best coding experience, please switch to a desktop device to
-          write and submit your solution.
+          {t("problem.mobileCopy")}
         </Text>
       </VStack>
     </Box>
@@ -1211,9 +1139,9 @@ export default function ProblemPage({ slug }: { slug: string }) {
 
   return (
     <Layout
-      title={problem.title}
-      ogTitle={`${problem.title}`}
-      ogImgSubtitle={`${problem.difficulty.charAt(0) + problem.difficulty.toLowerCase().slice(1)} | Problems | Tensara`}
+      title={localizedProblemTitle}
+      ogTitle={`${localizedProblemTitle}`}
+      ogImgSubtitle={`${problem.difficulty.charAt(0) + problem.difficulty.toLowerCase().slice(1)} | ${t("problems.title")} | SDUGPU`}
       isCodingMode
       headerToolbar={headerToolbar}
     >
@@ -1242,8 +1170,8 @@ export default function ProblemPage({ slug }: { slug: string }) {
             allowCollapse
             snapOffsetPx={18}
             resizerLineInsetTopPx={0}
-            collapsedLeftLabel="Problem"
-            collapsedRightLabel="Editor"
+            collapsedLeftLabel={t("problem.problemPanel")}
+            collapsedRightLabel={t("problem.editor")}
           />
         </Box>
         {mobileWarning}
@@ -1259,7 +1187,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
             borderColor="whiteAlpha.100"
             borderWidth={1}
           >
-            <ModalHeader color="white">Reference Solution</ModalHeader>
+            <ModalHeader color="white">{t("problem.reference")}</ModalHeader>
             <ModalCloseButton color="gray.400" />
             <ModalBody pb={6}>
               {problem.referenceSolution && (
@@ -1301,13 +1229,11 @@ export default function ProblemPage({ slug }: { slug: string }) {
             borderColor="whiteAlpha.100"
             borderWidth={1}
           >
-            <ModalHeader color="white">Function Parameters</ModalHeader>
+            <ModalHeader color="white">{t("problem.functionParams")}</ModalHeader>
             <ModalCloseButton color="gray.400" />
             <ModalBody pb={6}>
               {parameters.length === 0 ? (
-                <Text color="gray.300">
-                  This solution function takes no parameters.
-                </Text>
+                <Text color="gray.300">{t("problem.noFunctionParams")}</Text>
               ) : (
                 <VStack spacing={2} align="stretch">
                   <Text
@@ -1315,7 +1241,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
                     fontSize="xs"
                     textTransform="uppercase"
                   >
-                    Signature
+                    {t("problem.functionSignature")}
                   </Text>
                   <Text
                     color="teal.200"
@@ -1369,7 +1295,7 @@ export default function ProblemPage({ slug }: { slug: string }) {
                             py={0.5}
                             px={2}
                           >
-                            pointer
+                            {t("problem.pointer")}
                           </Badge>
                         )}
                       </HStack>

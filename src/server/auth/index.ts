@@ -77,13 +77,31 @@ export const authAPIKey = async (
   }
 };
 
+const DEV_USER: Session = {
+  user: {
+    id: "dev-user",
+    name: "Local Dev",
+    email: "dev@localhost",
+    image: null,
+  },
+  expires: new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+};
+
 export const combinedAuth = async (
   req?: GetServerSidePropsContext["req"],
   res?: GetServerSidePropsContext["res"]
 ): Promise<AuthResult> => {
-  return (
-    (await auth(req, res)) ?? (await authAPIKey(req?.headers.authorization))
-  );
+  const session =
+    (await auth(req, res)) ?? (await authAPIKey(req?.headers.authorization));
+
+  if (session && !("error" in session)) return session;
+
+  // Dev mode: auto-login with a local dev user
+  if (process.env.NODE_ENV === "development") {
+    return DEV_USER;
+  }
+
+  return session;
 };
 
 export { authConfig as config };

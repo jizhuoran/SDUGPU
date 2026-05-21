@@ -51,6 +51,8 @@ import { formatRuntime } from "~/utils/format";
 import { useSplitPanel } from "./SplitPanel";
 import { GPUMetricInfoPopover } from "~/components/misc/GPUMetricInfoPopover";
 import { FiHash } from "react-icons/fi";
+import { GPU_DISPLAY_NAMES } from "~/constants/gpu";
+import { useI18n } from "~/i18n";
 
 // Define more specific types for the response data - these match the types in src/types/submission.ts
 type ResponseTypeMap = {
@@ -162,6 +164,17 @@ const getTestCaseGPUMetrics = (
   };
 };
 
+const formatTestCaseName = (name: string) => {
+  const match = /^n_(\d+)$/.exec(name);
+  if (!match) return name;
+
+  const value = Number(match[1]);
+  const power = Math.log2(value);
+  if (!Number.isInteger(power)) return name;
+
+  return `n = 2^${power}`;
+};
+
 interface SubmissionResultsProps {
   metaStatus: SubmissionStatusType | SubmissionErrorType | null;
   metaResponse: ResponseTypeMap[keyof ResponseTypeMap] | null;
@@ -179,6 +192,8 @@ interface SubmissionResultsProps {
   submissionId?: string | null;
   onViewFlops?: () => void;
   hasFlopsCode?: boolean;
+  problemSlug?: string;
+  gpuType?: string;
 }
 
 const getStatusMessage = (
@@ -186,31 +201,31 @@ const getStatusMessage = (
 ): string => {
   switch (status) {
     case SubmissionStatus.IN_QUEUE:
-      return "In queue";
+      return "排队中";
     case SubmissionStatus.COMPILING:
-      return "Compiling...";
+      return "编译中...";
     case SubmissionStatus.CHECKING:
-      return "Running tests...";
+      return "运行测试中...";
     case SubmissionStatus.CHECKED:
-      return "Tests complete!";
+      return "测试完成！";
     case SubmissionStatus.BENCHMARKING:
-      return "Running benchmarks...";
+      return "性能评测中...";
     case SubmissionStatus.BENCHMARKED:
-      return "Benchmark complete!";
+      return "评测完成！";
     case SubmissionStatus.ACCEPTED:
-      return "ACCEPTED";
+      return "已通过";
     case SubmissionStatus.WRONG_ANSWER:
-      return "Wrong Answer";
+      return "答案错误";
     case SubmissionError.ERROR:
-      return "Error";
+      return "错误";
     case SubmissionError.COMPILE_ERROR:
-      return "Compile Error";
+      return "编译错误";
     case SubmissionError.RUNTIME_ERROR:
-      return "Runtime Error";
+      return "运行错误";
     case SubmissionError.TIME_LIMIT_EXCEEDED:
-      return "Time Limit Exceeded";
+      return "超出时间限制";
     case SubmissionError.RATE_LIMIT_EXCEEDED:
-      return "Rate Limit Exceeded";
+      return "请求过于频繁";
     default:
       return status;
   }
@@ -231,10 +246,14 @@ const SubmissionResults = ({
   submissionId,
   onViewFlops,
   hasFlopsCode,
+  problemSlug,
+  gpuType,
 }: SubmissionResultsProps) => {
+  const { locale, t } = useI18n();
   const { splitRatio } = useSplitPanel();
   const useCompactLabels = splitRatio < 40;
   if (!metaStatus) return null;
+  const showMemoryBandwidth = problemSlug === "vector-addition";
   const acceptedAvgGflops = getTypedResponse(
     SubmissionStatus.ACCEPTED
   )?.avg_gflops;
@@ -248,11 +267,18 @@ const SubmissionResults = ({
     ) ||
     acceptedAvgGflops != null ||
     benchmarkedAvgGflops != null;
+  const formatThroughput = (gflops: number) =>
+    showMemoryBandwidth
+      ? `${(gflops * 12).toFixed(2)} GB/s`
+      : `${gflops.toFixed(2)} GFLOPS`;
+  const gpuDisplayName = gpuType
+    ? (GPU_DISPLAY_NAMES[gpuType] ?? gpuType)
+    : null;
 
   return (
     <VStack spacing={4} align="stretch" p={3}>
       <HStack justify="space-between">
-        <Heading size="md">Results</Heading>
+        <Heading size="md">结果</Heading>
         <HStack>
           <Button
             variant="ghost"
@@ -266,7 +292,7 @@ const SubmissionResults = ({
               color: "white",
             }}
           >
-            {useCompactLabels ? "Submissions" : "My Submissions"}
+            {useCompactLabels ? t("problem.submit") : t("problem.mySubmissions")}
           </Button>
           <Button
             size="sm"
@@ -280,7 +306,11 @@ const SubmissionResults = ({
               color: "white",
             }}
           >
-            {useCompactLabels ? "Back" : "Back to Problem"}
+            {useCompactLabels
+              ? locale === "zh"
+                ? "返回"
+                : "Back"
+              : t("problem.backToProblem")}
           </Button>
         </HStack>
       </HStack>
@@ -329,10 +359,13 @@ const SubmissionResults = ({
             letterSpacing="wide"
             textTransform="uppercase"
           >
-            Performance
+            性能
           </Text>
           <Box bg="whiteAlpha.50" borderRadius="xl" overflow="hidden">
-            <SimpleGrid columns={2} spacing={0}>
+            <SimpleGrid
+              columns={{ base: 1, md: gpuDisplayName ? 3 : 2 }}
+              spacing={0}
+            >
               {/* Runtime */}
               <Box p={4}>
                 <Text
@@ -342,7 +375,7 @@ const SubmissionResults = ({
                   letterSpacing="wide"
                   mb={1}
                 >
-                  Runtime
+                  运行时间
                 </Text>
                 <Text fontSize="xl" fontWeight="bold" color="white">
                   {formatRuntime(
@@ -361,11 +394,11 @@ const SubmissionResults = ({
                       textTransform="uppercase"
                       letterSpacing="wide"
                     >
-                      Throughput
+                      {showMemoryBandwidth ? "带宽" : "吞吐量"}
                     </Text>
-                    {hasFlopsCode && onViewFlops && (
+                    {!showMemoryBandwidth && hasFlopsCode && onViewFlops && (
                       <IconButton
-                        aria-label="View FLOPs Calculation"
+                        aria-label="查看 FLOPs 计算"
                         icon={<Icon as={FiHash} />}
                         size="xs"
                         variant="ghost"
@@ -380,10 +413,25 @@ const SubmissionResults = ({
                     )}
                   </HStack>
                   <Text fontSize="xl" fontWeight="bold" color="white">
-                    {getTypedResponse(
-                      SubmissionStatus.ACCEPTED
-                    )!.avg_gflops!.toFixed(2)}{" "}
-                    GFLOPS
+                    {formatThroughput(
+                      getTypedResponse(SubmissionStatus.ACCEPTED)!.avg_gflops!
+                    )}
+                  </Text>
+                </Box>
+              )}
+              {gpuDisplayName && (
+                <Box p={4}>
+                  <Text
+                    fontSize="xs"
+                    color="whiteAlpha.500"
+                    textTransform="uppercase"
+                    letterSpacing="wide"
+                    mb={1}
+                  >
+                    GPU
+                  </Text>
+                  <Text fontSize="xl" fontWeight="bold" color="white">
+                    {gpuDisplayName}
                   </Text>
                 </Box>
               )}
@@ -415,9 +463,9 @@ const SubmissionResults = ({
                 >
                   <HStack spacing={2} width="100%">
                     <HStack spacing={2}>
-                      <Text fontWeight="semibold">Benchmark Results</Text>
+                      <Text fontWeight="semibold">评测结果</Text>
                       <IconButton
-                        aria-label="Toggle test cases"
+                        aria-label="展开或收起测试用例"
                         icon={
                           isTestCaseTableOpen ? (
                             <FaChevronUp />
@@ -468,33 +516,37 @@ const SubmissionResults = ({
                         <Thead bg="whiteAlpha.100">
                           <Tr>
                             <Th color="whiteAlpha.700" py={3}>
-                              Test Case
+                              测试用例
                             </Th>
                             <Th color="whiteAlpha.700" py={3} isNumeric>
-                              Runtime
+                              运行时间
                             </Th>
                             {showGflopsColumn && (
                               <Th color="whiteAlpha.700" py={3} isNumeric>
                                 <HStack spacing={1} justify="flex-start">
-                                  <Text>GFLOPS</Text>
-                                  {hasFlopsCode && onViewFlops && (
-                                    <IconButton
-                                      aria-label="View FLOPs Calculation"
-                                      icon={<Icon as={FiHash} />}
-                                      size="xs"
-                                      variant="ghost"
-                                      color="gray.500"
-                                      _hover={{
-                                        color: "white",
-                                        bg: "transparent",
-                                      }}
-                                      bg="transparent"
-                                      minW="auto"
-                                      h="auto"
-                                      p={0}
-                                      onClick={onViewFlops}
-                                    />
-                                  )}
+                                  <Text>
+                                    {showMemoryBandwidth ? "GB/s" : "GFLOPS"}
+                                  </Text>
+                                  {!showMemoryBandwidth &&
+                                    hasFlopsCode &&
+                                    onViewFlops && (
+                                      <IconButton
+                                        aria-label="查看 FLOPs 计算"
+                                        icon={<Icon as={FiHash} />}
+                                        size="xs"
+                                        variant="ghost"
+                                        color="gray.500"
+                                        _hover={{
+                                          color: "white",
+                                          bg: "transparent",
+                                        }}
+                                        bg="transparent"
+                                        minW="auto"
+                                        h="auto"
+                                        p={0}
+                                        onClick={onViewFlops}
+                                      />
+                                    )}
                                 </HStack>
                               </Th>
                             )}
@@ -522,7 +574,9 @@ const SubmissionResults = ({
                                       color="green.300"
                                       boxSize={4}
                                     />
-                                    <Text>{result.result.name}</Text>
+                                    <Text>
+                                      {formatTestCaseName(result.result.name)}
+                                    </Text>
                                   </HStack>
                                 </Td>
                                 <Td py={3} isNumeric>
@@ -536,7 +590,9 @@ const SubmissionResults = ({
                                   <Td py={3} isNumeric>
                                     <Text>
                                       {gflops !== undefined && gflops !== null
-                                        ? gflops.toFixed(2)
+                                        ? showMemoryBandwidth
+                                          ? (gflops * 12).toFixed(2)
+                                          : gflops.toFixed(2)
                                         : "-"}
                                     </Text>
                                   </Td>
@@ -555,7 +611,7 @@ const SubmissionResults = ({
                                           fontSize="xs"
                                           color="whiteAlpha.600"
                                         >
-                                          Temp
+                                          温度
                                         </Text>
                                         <Text fontSize="sm" fontWeight="medium">
                                           {gpuMetrics.tempAvg.toFixed(0)}°C
@@ -566,7 +622,7 @@ const SubmissionResults = ({
                                           fontSize="xs"
                                           color="whiteAlpha.600"
                                         >
-                                          SM Clock
+                                          SM 频率
                                         </Text>
                                         <Text fontSize="sm" fontWeight="medium">
                                           {gpuMetrics.clockAvg.toFixed(0)} MHz
@@ -612,7 +668,7 @@ const SubmissionResults = ({
                                           color="red.300"
                                           boxSize={4}
                                         />
-                                        <Text>Test Case {testId}</Text>
+                                        <Text>测试用例 {testId}</Text>
                                       </HStack>
                                     </Td>
                                     <Td py={3} isNumeric>
@@ -643,7 +699,6 @@ const SubmissionResults = ({
           metaStatus === SubmissionStatus.BENCHMARKED) &&
         benchmarkResults.length > 0 &&
         (() => {
-          console.log(benchmarkResults);
           const gpuMetrics = aggregateGPUMetrics(benchmarkResults);
           if (!gpuMetrics) return null;
 
@@ -657,7 +712,7 @@ const SubmissionResults = ({
                 letterSpacing="wide"
                 textTransform="uppercase"
               >
-                GPU Metrics
+                GPU 指标
               </Text>
               <Box bg="whiteAlpha.50" borderRadius="xl" overflow="hidden">
                 <SimpleGrid columns={2} spacing={0}>
@@ -670,7 +725,7 @@ const SubmissionResults = ({
                         textTransform="uppercase"
                         letterSpacing="wide"
                       >
-                        Temperature
+                        温度
                       </Text>
                       <GPUMetricInfoPopover metric="temperature" />
                     </HStack>
@@ -688,7 +743,7 @@ const SubmissionResults = ({
                         textTransform="uppercase"
                         letterSpacing="wide"
                       >
-                        SM Clock
+                        SM 频率
                       </Text>
                       <GPUMetricInfoPopover metric="smClock" />
                     </HStack>
@@ -721,7 +776,7 @@ const SubmissionResults = ({
                 {debugInfo.max_difference && (
                   <Box>
                     <Text color="red.200" fontSize="sm">
-                      Maximum Difference:
+                      最大差异：
                     </Text>
                     <Text color="red.100">{debugInfo.max_difference}</Text>
                   </Box>
@@ -729,7 +784,7 @@ const SubmissionResults = ({
                 {debugInfo.mean_difference && (
                   <Box>
                     <Text color="red.200" fontSize="sm">
-                      Mean Difference:
+                      平均差异：
                     </Text>
                     <Text color="red.100">{debugInfo.mean_difference}</Text>
                   </Box>
@@ -738,22 +793,22 @@ const SubmissionResults = ({
                   Object.keys(debugInfo.sample_differences).length > 0 && (
                     <Box>
                       <Text color="red.200" fontSize="sm" mb={2}>
-                        Sample Differences:
+                        {locale === "zh" ? "样例差异：" : "Sample differences:"}
                       </Text>
                       <Box maxH="200px" overflowY="auto">
                         <Table size="sm" variant="unstyled">
                           <Thead position="sticky" top={0}>
                             <Tr>
-                              <Th color="red.200">Index</Th>
+                              <Th color="red.200">下标</Th>
                               <Th color="red.200" isNumeric>
-                                Expected
+                                期望值
                               </Th>
                               <Th color="red.200" isNumeric>
-                                Actual
+                                实际值
                               </Th>
                               {debugInfo.mean_difference && (
                                 <Th color="red.200" isNumeric>
-                                  Difference
+                                  差异
                                 </Th>
                               )}
                             </Tr>
@@ -768,7 +823,7 @@ const SubmissionResults = ({
                                     {value.expected.toFixed(7)}
                                   </Td>
                                   <Td color="red.100" isNumeric>
-                                    {value.actual?.toFixed(7) ?? "NaN or inf"}
+                                    {value.actual?.toFixed(7) ?? "NaN 或 inf"}
                                   </Td>
                                   {value.diff && (
                                     <Td color="red.100" isNumeric>
@@ -792,7 +847,7 @@ const SubmissionResults = ({
       {Boolean(metaStatus) && isSubmissionError(metaStatus) && (
         <Box bg="red.900" p={4} borderRadius="xl">
           <Heading size="sm" mb={3} color="red.200">
-            Error Details
+            错误详情
           </Heading>
           {(() => {
             const errorResponse = getTypedResponse(metaStatus);
@@ -842,7 +897,7 @@ const SubmissionResults = ({
             }}
             px={4}
           >
-            View Submission
+            {locale === "zh" ? "查看提交" : "View Submission"}
           </Button>
         </Box>
       )}

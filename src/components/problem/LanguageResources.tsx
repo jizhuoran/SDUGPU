@@ -12,6 +12,7 @@ import NextLink from "next/link";
 import { FaChevronDown } from "react-icons/fa";
 
 import { getLanguageResources } from "~/constants/language";
+import { useI18n } from "~/i18n";
 
 type LanguageResourcesProps = {
   language: string;
@@ -20,6 +21,7 @@ type LanguageResourcesProps = {
 export default function LanguageResources({
   language,
 }: LanguageResourcesProps) {
+  const { t, locale } = useI18n();
   const resources = getLanguageResources(language);
 
   if (!resources.length) {
@@ -28,7 +30,7 @@ export default function LanguageResources({
 
   return (
     <Menu>
-      <Tooltip label="Language resources" hasArrow placement="bottom">
+      <Tooltip label={t("problem.languageResources")} hasArrow placement="bottom">
         <MenuButton
           as={ChakraLink}
           _hover={{ color: "white", textDecoration: "none" }}
@@ -42,7 +44,7 @@ export default function LanguageResources({
           flexShrink={0}
         >
           <HStack spacing={1} color="gray.300">
-            <Text>Resources</Text>
+            <Text>{locale === "zh" ? "资源" : "Resources"}</Text>
             <FaChevronDown size={8} color="#71717a" />
           </HStack>
         </MenuButton>

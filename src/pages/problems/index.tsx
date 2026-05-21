@@ -19,7 +19,6 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Link,
   Divider,
   Tooltip,
 } from "@chakra-ui/react";
@@ -34,7 +33,6 @@ import {
   FaChevronUp,
   FaCheckCircle,
   FaClock,
-  FaGithub,
   FaTimes,
 } from "react-icons/fa";
 import { createServerSideHelpers } from "@trpc/react-query/server";
@@ -42,8 +40,10 @@ import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import superjson from "superjson";
 import type { GetServerSideProps } from "next";
-import { tagNames, tagAltNames } from "~/constants/problem";
+import { getTagName } from "~/constants/problem";
 import { useHotkey } from "~/hooks/useHotKey";
+import { useI18n, type Locale } from "~/i18n";
+import { getProblemTitle } from "~/i18n/problem-content";
 
 type SortField = "title" | "difficulty" | "submissionCount";
 type SortDirection = "asc" | "desc";
@@ -58,6 +58,35 @@ export const getDifficultyColor = (difficulty: string) => {
       return "red";
     default:
       return "gray";
+  }
+};
+
+export const formatDifficultyLabel = (
+  difficulty: string,
+  locale: Locale = "zh"
+) => {
+  if (locale === "en") {
+    switch (difficulty.toLowerCase()) {
+      case "easy":
+        return "Easy";
+      case "medium":
+        return "Medium";
+      case "hard":
+        return "Hard";
+      default:
+        return difficulty;
+    }
+  }
+
+  switch (difficulty.toLowerCase()) {
+    case "easy":
+      return "简单";
+    case "medium":
+      return "中等";
+    case "hard":
+      return "困难";
+    default:
+      return difficulty;
   }
 };
 
@@ -108,6 +137,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default function ProblemsPage() {
+  const { locale, t } = useI18n();
   const router = useRouter();
   const { data: problems = [], isLoading } = api.problems.getAll.useQuery(
     undefined,
@@ -137,10 +167,10 @@ export default function ProblemsPage() {
     searchInputRef.current.select();
   });
   const difficultyOptions = [
-    { label: "All Difficulties", value: "all" },
-    { label: "Easy", value: "easy" },
-    { label: "Medium", value: "medium" },
-    { label: "Hard", value: "hard" },
+    { label: t("problems.allDifficulty"), value: "all" },
+    { label: t("difficulty.easy"), value: "easy" },
+    { label: t("difficulty.medium"), value: "medium" },
+    { label: t("difficulty.hard"), value: "hard" },
   ];
 
   const allTags = useMemo(() => {
@@ -167,22 +197,20 @@ export default function ProblemsPage() {
     const query = tagSearchQuery.trim().toLowerCase();
     if (!query) return allTags;
     return allTags.filter((tag) => {
-      const displayName = (
-        tagAltNames[tag as keyof typeof tagAltNames] ?? tag
-      ).toLowerCase();
+      const displayName = getTagName(tag, locale, true).toLowerCase();
       return tag.toLowerCase().includes(query) || displayName.includes(query);
     });
-  }, [allTags, tagSearchQuery]);
+  }, [allTags, tagSearchQuery, locale]);
   const visibleTags = useMemo(() => {
     if (tagSearchQuery.trim()) return filteredTags;
     return filteredTags.filter((tag) => !popularTags.includes(tag));
   }, [filteredTags, popularTags, tagSearchQuery]);
 
   const statusOptions: { label: string; value: ProblemStatus }[] = [
-    { label: "All Statuses", value: "all" },
-    { label: "Solved", value: "solved" },
-    { label: "Unsolved", value: "unsolved" },
-    { label: "Attempting", value: "attempting" },
+    { label: t("problems.allStatus"), value: "all" },
+    { label: t("problems.solved"), value: "solved" },
+    { label: t("problems.unsolved"), value: "unsolved" },
+    { label: t("problems.attempting"), value: "attempting" },
   ];
 
   const handleSort = (field: SortField) => {
@@ -203,20 +231,22 @@ export default function ProblemsPage() {
     }
   };
 
-  const contributeUrl = "https://github.com/tensara/problems/";
   const hasSearch = searchQuery.trim().length > 0;
   const selectedTagsTooltipLabel = useMemo(() => {
     if (selectedTags.length === 0) return "";
     return selectedTags
-      .map((tag) => tagAltNames[tag as keyof typeof tagAltNames] ?? tag)
+      .map((tag) => getTagName(tag, locale, true))
       .join(", ");
-  }, [selectedTags]);
+  }, [selectedTags, locale]);
 
   const filteredAndSortedProblems = problems
     ?.filter((problem) => {
-      const matchesSearch = problem.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const displayTitle = getProblemTitle(problem.slug, problem.title, locale);
+      const query = searchQuery.toLowerCase();
+      const matchesSearch =
+        displayTitle.toLowerCase().includes(query) ||
+        problem.title.toLowerCase().includes(query) ||
+        problem.slug.toLowerCase().includes(query);
       const matchesDifficulty =
         difficultyFilter === "all" ||
         problem.difficulty.toLowerCase() === difficultyFilter.toLowerCase();
@@ -246,7 +276,12 @@ export default function ProblemsPage() {
 
       switch (sortField) {
         case "title":
-          return multiplier * a.title.localeCompare(b.title);
+          return (
+            multiplier *
+            getProblemTitle(a.slug, a.title, locale).localeCompare(
+              getProblemTitle(b.slug, b.title, locale)
+            )
+          );
         case "difficulty": {
           const diffComparison =
             multiplier *
@@ -266,7 +301,7 @@ export default function ProblemsPage() {
 
   if (isLoading) {
     return (
-      <Layout title="Problems">
+      <Layout title={t("problems.title")}>
         <Box
           display="flex"
           justifyContent="center"
@@ -281,9 +316,9 @@ export default function ProblemsPage() {
 
   return (
     <Layout
-      title="Problems"
-      ogTitle="Problems | Tensara"
-      ogDescription="A collection of problems available to submit on Tensara."
+      title={t("problems.title")}
+      ogTitle={`${t("problems.title")} | SDUGPU`}
+      ogDescription={t("problems.og")}
     >
       <Box maxW="7xl" mx="auto" px={4} py={8}>
         <VStack spacing={6} align="stretch" w="full">
@@ -294,7 +329,7 @@ export default function ProblemsPage() {
               </InputLeftElement>
               <Input
                 ref={searchInputRef}
-                placeholder="Search problems..."
+                placeholder={t("problems.search")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 bg="whiteAlpha.50"
@@ -321,7 +356,7 @@ export default function ProblemsPage() {
                 >
                   {difficultyOptions.find(
                     (opt) => opt.value === difficultyFilter
-                  )?.label ?? "All Difficulties"}
+                  )?.label ?? t("problems.allDifficulty")}
                 </MenuButton>
                 <MenuList
                   bg="brand.secondary"
@@ -362,7 +397,7 @@ export default function ProblemsPage() {
                         {selectedTags.length > 0 ? (
                           <Box
                             role="button"
-                            aria-label="Clear tag filters"
+                            aria-label={t("problems.clearTags")}
                             tabIndex={0}
                             onMouseEnter={() => setIsHoveringTagClear(true)}
                             onMouseLeave={() => setIsHoveringTagClear(false)}
@@ -409,10 +444,8 @@ export default function ProblemsPage() {
                     justifyContent="flex-start"
                   >
                     {selectedTags.length === 0
-                      ? "All Tags"
-                      : `${selectedTags.length} tag${
-                          selectedTags.length > 1 ? "s" : ""
-                        }`}
+                      ? t("problems.allTags")
+                      : t("problems.tagCount", { count: selectedTags.length })}
                   </MenuButton>
                 </Tooltip>
                 <MenuList
@@ -426,7 +459,7 @@ export default function ProblemsPage() {
                   <Box px={3} py={2}>
                     <Input
                       size="sm"
-                      placeholder="Search tags..."
+                      placeholder={t("problems.searchTags")}
                       value={tagSearchQuery}
                       onChange={(e) => setTagSearchQuery(e.target.value)}
                       bg="whiteAlpha.100"
@@ -454,7 +487,7 @@ export default function ProblemsPage() {
                         >
                           <HStack w="full" justify="space-between">
                             <Text>
-                              {tagAltNames[tag as keyof typeof tagAltNames]}
+                              {getTagName(tag, locale, true)}
                             </Text>
                             {selectedTags.includes(tag) ? (
                               <FaCheckCircle
@@ -486,7 +519,7 @@ export default function ProblemsPage() {
                     >
                       <HStack w="full" justify="space-between">
                         <Text>
-                          {tagAltNames[tag as keyof typeof tagAltNames]}
+                          {getTagName(tag, locale, true)}
                         </Text>
                         {selectedTags.includes(tag) ? (
                           <FaCheckCircle
@@ -517,7 +550,7 @@ export default function ProblemsPage() {
                   >
                     {statusOptions.find(
                       (opt) => opt.value === problemStatusFilter
-                    )?.label ?? "Status"}
+                    )?.label ?? t("problems.status")}
                   </MenuButton>
                   <MenuList
                     bg="brand.secondary"
@@ -544,19 +577,10 @@ export default function ProblemsPage() {
           </HStack>
 
           <Text color="gray.400" fontSize="sm">
-            Showing {filteredAndSortedProblems?.length} of {problems?.length}{" "}
-            problems. Help us reach{" "}
-            {(Math.floor((problems?.length ?? 0) / 100) + 1) * 100} problems{" "}
-            <Link
-              href={contributeUrl}
-              isExternal
-              color="brand.primary"
-              textDecoration="underline"
-              _hover={{ color: "green.300" }}
-            >
-              here
-            </Link>
-            !
+            {t("problems.count", {
+              total: problems?.length ?? 0,
+              shown: filteredAndSortedProblems?.length ?? 0,
+            })}
           </Text>
 
           <Box
@@ -590,7 +614,7 @@ export default function ProblemsPage() {
                         >
                           <Box w="16px" h="16px" />
                         </Box>
-                        <Text>Title</Text>
+                        <Text>{t("problems.table.problem")}</Text>
                         <SortIcon
                           field="title"
                           sortField={sortField}
@@ -609,7 +633,7 @@ export default function ProblemsPage() {
                       _hover={{ color: "white" }}
                     >
                       <HStack spacing={2}>
-                        <Text>Difficulty</Text>
+                        <Text>{t("problems.table.difficulty")}</Text>
                         <SortIcon
                           field="difficulty"
                           sortField={sortField}
@@ -626,7 +650,7 @@ export default function ProblemsPage() {
                       cursor="pointer"
                       _hover={{ color: "white" }}
                     >
-                      Tags
+                      {t("problems.table.tags")}
                     </Th>
                     <Th
                       color="gray.300"
@@ -640,7 +664,7 @@ export default function ProblemsPage() {
                       _hover={{ color: "white" }}
                     >
                       <HStack spacing={2}>
-                        <Text>Submissions</Text>
+                        <Text>{t("problems.table.submissions")}</Text>
                         <SortIcon
                           field="submissionCount"
                           sortField={sortField}
@@ -688,7 +712,9 @@ export default function ProblemsPage() {
                               <Box w="16px" h="16px" />
                             )}
                           </Box>
-                          <Text>{problem.title}</Text>
+                          <Text>
+                            {getProblemTitle(problem.slug, problem.title, locale)}
+                          </Text>
                         </HStack>
                       </Td>
                       <Td borderBottom="none">
@@ -698,7 +724,7 @@ export default function ProblemsPage() {
                           py={0.5}
                           borderRadius="md"
                         >
-                          {problem.difficulty}
+                          {formatDifficultyLabel(problem.difficulty, locale)}
                         </Badge>
                       </Td>
                       <Td color="white" borderBottom="none">
@@ -715,10 +741,10 @@ export default function ProblemsPage() {
                                 py={0.5}
                                 borderRadius="full"
                                 title={
-                                  tagAltNames[tag as keyof typeof tagAltNames]
+                                  getTagName(tag, locale, true)
                                 }
                               >
-                                {tagNames[tag as keyof typeof tagNames]}
+                                {getTagName(tag, locale)}
                               </Badge>
                             ))}
                           </HStack>
@@ -736,33 +762,13 @@ export default function ProblemsPage() {
             ) : (
               <VStack py={12} px={6} spacing={3} align="center">
                 <Text color="white" fontSize="lg" fontWeight="600">
-                  {hasSearch ? "No such problem found." : "No problems found."}
+                  {hasSearch
+                    ? t("problems.empty.search")
+                    : t("problems.empty.none")}
                 </Text>
                 <Text color="whiteAlpha.700" textAlign="center">
-                  Interested in contributing? Add a new problem on{" "}
-                  <Link
-                    href={contributeUrl}
-                    isExternal
-                    color="brand.primary"
-                    textDecoration="underline"
-                    _hover={{ color: "green.300" }}
-                  >
-                    github.com/tensara/problems
-                  </Link>
-                  .
+                  {t("problems.empty.hint")}
                 </Text>
-                <Button
-                  as="a"
-                  href={contributeUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  bg="whiteAlpha.100"
-                  _hover={{ bg: "whiteAlpha.200" }}
-                  color="white"
-                  leftIcon={<FaGithub />}
-                >
-                  Contribute a problem
-                </Button>
               </VStack>
             )}
           </Box>

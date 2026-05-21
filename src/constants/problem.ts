@@ -1,5 +1,6 @@
 import { isSubmissionError } from "~/types/submission";
 import { FaCheck, FaTimes, FaExclamationCircle, FaClock } from "react-icons/fa";
+import type { Locale } from "~/i18n";
 
 export const DEFAULT_LANGUAGE = "cuda";
 
@@ -15,29 +16,54 @@ export const ADJUSTMENT_FACTOR = 32; // No reasoning for this, i just like 2^5
 
 export const START_RATING = 1000;
 
-export const formatStatus = (status: string | null) => {
+export const formatStatus = (status: string | null, locale: Locale = "zh") => {
+  if (locale === "en") {
+    switch (status) {
+      case "ACCEPTED":
+        return "Accepted";
+      case "WRONG_ANSWER":
+        return "Wrong Answer";
+      case "ERROR":
+        return "Error";
+      case "CHECKING":
+        return "Checking";
+      case "BENCHMARKING":
+        return "Benchmarking";
+      case "COMPILE_ERROR":
+        return "Compile Error";
+      case "RUNTIME_ERROR":
+        return "Runtime Error";
+      case "MEMORY_LIMIT_EXCEEDED":
+        return "Memory Limit Exceeded";
+      case "TIME_LIMIT_EXCEEDED":
+        return "Time Limit Exceeded";
+      default:
+        return status ?? "Unknown";
+    }
+  }
+
   switch (status) {
     case "ACCEPTED":
-      return "Accepted";
+      return "已通过";
     case "WRONG_ANSWER":
-      return "Wrong Answer";
+      return "答案错误";
     case "ERROR":
-      return "Error";
+      return "错误";
     case "CHECKING":
-      return "Checking";
+      return "测试中";
     case "BENCHMARKING":
-      return "Benchmarking";
+      return "评测中";
     case "COMPILE_ERROR":
-      return "Compile Error";
+      return "编译错误";
     case "RUNTIME_ERROR":
-      return "Runtime Error";
+      return "运行错误";
     case "MEMORY_LIMIT_EXCEEDED":
-      return "Memory Limit Exceeded";
+      return "超出内存限制";
     case "TIME_LIMIT_EXCEEDED":
-      return "Time Limit Exceeded";
+      return "超出时间限制";
 
     default:
-      return status ?? "Unknown";
+      return status ?? "未知状态";
   }
 };
 
@@ -94,20 +120,44 @@ export const tags = [
 ] as const;
 
 export const tagNames = {
+  attention: "注意力",
+  convolution: "卷积",
+  pooling: "池化",
+  normalization: "归一化",
+  "activation-function": "激活",
+  graphics: "图形",
+  graphs: "图",
+  fused: "融合",
+  crypto: "密码学",
+  "loss-function": "损失",
+  scalar: "标量",
+  sorting: "排序",
+  vector: "向量",
+  matmul: "矩阵乘",
+  scan: "Scan",
+  statistics: "统计",
+  reduction: "归约",
+  quantization: "量化",
+  nvfp4: "NVFP4",
+  mxfp8: "MXFP8",
+  mxfp4: "MXFP4",
+} as const;
+
+export const tagNamesEn = {
   attention: "Attention",
   convolution: "Convolution",
   pooling: "Pooling",
   normalization: "Normalization",
-  "activation-function": "Activations",
+  "activation-function": "Activation",
   graphics: "Graphics",
   graphs: "Graphs",
   fused: "Fused",
-  crypto: "Cryptography",
+  crypto: "Crypto",
   "loss-function": "Loss",
   scalar: "Scalar",
   sorting: "Sorting",
   vector: "Vector",
-  matmul: "Matmul",
+  matmul: "MatMul",
   scan: "Scan",
   statistics: "Statistics",
   reduction: "Reduction",
@@ -118,16 +168,40 @@ export const tagNames = {
 } as const;
 
 export const tagAltNames = {
+  attention: "注意力",
+  convolution: "卷积",
+  crypto: "密码学",
+  pooling: "池化",
+  normalization: "归一化",
+  "activation-function": "激活函数",
+  graphics: "图形",
+  graphs: "图算法",
+  fused: "融合算子",
+  "loss-function": "损失函数",
+  sorting: "排序",
+  scalar: "标量",
+  vector: "向量",
+  matmul: "矩阵乘法",
+  scan: "Scan",
+  statistics: "统计",
+  reduction: "归约",
+  quantization: "量化",
+  nvfp4: "NVFP4",
+  mxfp8: "MXFP8",
+  mxfp4: "MXFP4",
+} as const;
+
+export const tagAltNamesEn = {
   attention: "Attention",
   convolution: "Convolution",
   crypto: "Cryptography",
   pooling: "Pooling",
   normalization: "Normalization",
-  "activation-function": "Activation Functions",
+  "activation-function": "Activation Function",
   graphics: "Graphics",
-  graphs: "Graphs",
-  fused: "Fused Operations",
-  "loss-function": "Loss Functions",
+  graphs: "Graph Algorithms",
+  fused: "Fused Operators",
+  "loss-function": "Loss Function",
   sorting: "Sorting",
   scalar: "Scalar",
   vector: "Vector",
@@ -140,3 +214,12 @@ export const tagAltNames = {
   mxfp8: "MXFP8",
   mxfp4: "MXFP4",
 } as const;
+
+export function getTagName(tag: string, locale: Locale, long = false) {
+  if (locale === "en") {
+    const source = long ? tagAltNamesEn : tagNamesEn;
+    return source[tag as keyof typeof source] ?? tag;
+  }
+  const source = long ? tagAltNames : tagNames;
+  return source[tag as keyof typeof source] ?? tag;
+}
